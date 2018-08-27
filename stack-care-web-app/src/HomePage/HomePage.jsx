@@ -1,57 +1,93 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { NavBar, SearchBar, Map, Notifications, CommunitiesStatus, Loading } from '../_components'
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography'
+import { communityActions, unitActions } from '../_actions';
+import classNames from 'classnames';
 
-import { userActions } from '../_actions';
 
 class HomePage extends React.Component {
-    componentDidMount() {
-        this.props.dispatch(userActions.getAll());
-    }
 
-    handleDeleteUser(id) {
-        return (e) => this.props.dispatch(userActions.delete(id));
+    componentDidMount() {
+        this.props.getAllCommunities()
     }
 
     render() {
-        const { user, users } = this.props;
-        return (
-            <div className="col-md-6 col-md-offset-3">
-                <h1>Hi {user.firstName}!</h1>
-                <p>You're logged in with React!!</p>
-                <h3>All registered users:</h3>
-                {users.loading && <em>Loading users...</em>}
-                {users.error && <span className="text-danger">ERROR: {users.error}</span>}
-                {users.items &&
-                    <ul>
-                        {users.items.map((user, index) =>
-                            <li key={user.id}>
-                                {user.firstName + ' ' + user.lastName}
-                                {
-                                    user.deleting ? <em> - Deleting...</em>
-                                    : user.deleteError ? <span className="text-danger"> - ERROR: {user.deleteError}</span>
-                                    : <span> - <a onClick={this.handleDeleteUser(user.id)}>Delete</a></span>
-                                }
-                            </li>
-                        )}
-                    </ul>
-                }
-                <p>
-                    <Link to="/login">Logout</Link>
-                </p>
-            </div>
-        );
+        const { allCommunities, loaded } = this.props;
+
+        /*
+        <Grid item sm={2} className={classNames("flex", "refreshContainer")}>
+        
+        </Grid>
+        <Grid item sm={2} className={classNames("flex", "filterContainer")}>
+        
+        </Grid>*/
+        return(
+            !loaded ? <Loading /> :
+            <NavBar>
+                <Grid container className="flex" justify="center" alignItems="stretch">
+                    <Grid item xs={10} className="flex">
+                        <Grid container className="flex" alignItems="stretch" direction="column" justify="space-around">
+                            <Grid item className={classNames("flex", "topGridContainer", "padded2x")}>
+                                <Grid container className="flex" alignItems="stretch" direction="row" justify="center">
+                                    <Grid item sm={6} className={classNames("flex", "searchBarContainer")}>
+                                        <SearchBar allCommunities={allCommunities} getAllUnits={this.props.getAllUnits} />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item className={classNames("flex", "bottomGridContainer", "padded")}>
+                                <Grid container className="flex" alignItems="stretch" direction="row" justify="space-around">
+                                    <Grid item sm={6} className={classNames("flex", "padded")}>
+                                        <CommunitiesStatus allCommunities={allCommunities} getAllUnits={this.props.getAllUnits} />
+                                    </Grid>
+                                    <Grid item sm={6} className={classNames("flex", "padded")}>
+                                        <Grid container className="flex" alignItems="stretch" direction="column" justify="space-around">
+                                            <Grid item sm className={classNames("flex", "mapContainer")}>
+                                                <Map />
+                                            </Grid>
+                                            <Grid item sm className={classNames("flex", "graphDiv")}>
+                                                <Grid container className={classNames("flex", "graphContainer")} alignItems="stretch" direction="column" justify="space-around">
+                                                    <Grid item sm className="title">
+                                                        <Typography variant="headline" component="h3">
+                                                            Notifications
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item sm className="flex">
+                                                        <Notifications />
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </NavBar>
+        )
     }
 }
 
+
 function mapStateToProps(state) {
-    const { users, authentication } = state;
-    const { user } = authentication;
+    const { loaded, allCommunities } = state.communities;
     return {
-        user,
-        users
+        allCommunities,
+        loaded
     };
 }
 
-const connectedHomePage = connect(mapStateToProps)(HomePage);
+const mapDispatchToProps = (dispatch) => ({
+    getAllUnits: (id) => {
+        dispatch(communityActions.setCommunity(id))
+        dispatch(unitActions.getAllUnits(id))
+    },
+    getAllCommunities: () => {
+        dispatch(communityActions.getAllCommunities())
+    }
+})
+
+const connectedHomePage = connect(mapStateToProps, mapDispatchToProps)(HomePage);
 export { connectedHomePage as HomePage };

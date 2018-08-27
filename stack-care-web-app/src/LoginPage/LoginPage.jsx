@@ -58,7 +58,6 @@ class LoginPage extends React.Component {
 
     render() {
         const { loggingIn, classes } = this.props;
-        const { username, password, submitted } = this.state;
         return (
             <NavBar>
             <Grid container className={classNames("App", "flex")} alignItems="center" direction="row" justify="center">
