@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { history } from '../_helpers';
@@ -26,10 +26,12 @@ class App extends React.Component {
         return (
             <Router history={history}>
                 <div className="h100">
+                <Switch>
                     <PrivateRoute exact path="/" component={HomePage} />
-                    <Route path="/login" component={LoginPage} />
-                    <Route path="/register" component={RegisterPage} />
-                    <Route path="/:id" component={CommunityPage} />
+                    <Route exact path="/login" component={LoginPage} />
+                    <Route exact path="/register" component={RegisterPage} />
+                    <PrivateRoute exact path="/:id" component={CommunityPage} />
+                </Switch>
                 </div>
             </Router>
         );
