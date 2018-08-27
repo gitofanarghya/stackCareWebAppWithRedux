@@ -30,7 +30,9 @@ class IntegrationReactSelect extends Component {
 
 
   handleChange = value => {
-     if(value) this.props.getAllUnits(value.value)  
+    if(value) {
+        this.props.setCommunity(value.value)  
+    }
   };
   
   render() {

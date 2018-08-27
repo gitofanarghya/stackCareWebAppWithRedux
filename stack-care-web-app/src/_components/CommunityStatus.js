@@ -28,7 +28,7 @@ class Communities extends React.Component {
   }
 
   handleClick(id) {
-    this.props.getAllUnits(id)
+    this.props.setCommunity(id)
   }
 
   render() {

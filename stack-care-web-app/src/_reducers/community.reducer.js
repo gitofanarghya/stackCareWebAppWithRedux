@@ -3,8 +3,7 @@ import { communityConstants } from '../_constants';
 const initialState = {
   requesting: false,
   allCommunities: null,
-  loaded: false,
-  selectedCommunity: null
+  loaded: false
 }
 
 export function communities(state, action) {
@@ -31,11 +30,6 @@ export function communities(state, action) {
         requesting: false,
         error: action.error,
         loaded: false
-      };
-    case communityConstants.SET_COMMUNITY:
-      return {
-        ...state,
-        selectedCommunity: state.allCommunities.find(community => community.id === action.id)
       };
     default:
       return state

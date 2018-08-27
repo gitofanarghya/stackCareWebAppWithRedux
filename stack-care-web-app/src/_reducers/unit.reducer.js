@@ -5,9 +5,10 @@ const initialState = {
   allUnits: null,
   loaded: false,
   selectedUnit: null,
-  selectedCommunityId: null,
   loadedUnitDetails: false,
-  selectedUnitId: null
+  selectedUnitId: null,
+  loadedCurrentZone: false,
+  currentZone: null
 }
 
 export function units(state, action) {
@@ -55,7 +56,7 @@ export function units(state, action) {
       return {
         ...state,
         requesting:false,
-        loaded: true
+        loadedUnitDetails: true
       }
     case unitConstants.GET_UNIT_DETAILS_REQUEST:
       return {
@@ -80,6 +81,23 @@ export function units(state, action) {
         error: action.error,
         loadedUnitDetails: false
       }
+    case unitConstants.SET_CURRENT_ZONE:
+      return {
+        ...state,
+        loadedCurrentZone: true,
+        currentZone: {
+          zoneId: action.id,
+          bulbs: state.allUnits[state.selectedCommunityId].find(unit => unit.id === state.selectedUnitId).unitDetails.bulbs.filter(bulb => bulb.zone_id === action.id),
+          sensors: state.allUnits[state.selectedCommunityId].find(unit => unit.id === state.selectedUnitId).unitDetails.sensors.filter(sensor => sensor.zone_id === action.id),
+          switches: state.allUnits[state.selectedCommunityId].find(unit => unit.id === state.selectedUnitId).unitDetails.switches.filter(swtch => swtch.zone_id === action.id)
+        }
+      }
+    case unitConstants.SET_COMMUNITY:
+      return {
+        ...state,
+        selectedCommunityId: action.id,
+        loaded: false
+      };
     default:
       return state
   }

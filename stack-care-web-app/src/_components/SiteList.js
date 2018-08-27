@@ -54,7 +54,7 @@ function SiteList(props) {
   return (
     <Paper className={classes.root}>
         <Typography className={classes.heading} variant="headline" component="h3">
-          <p>{props.community.name} - Summary</p>
+          <p>{props.communityName} - Summary</p>
         </Typography>
         <Table className={classes.table}>
             <TableHead>
@@ -69,7 +69,7 @@ function SiteList(props) {
                 return (
                 <TableRow 
                   hover
-                  onClick={() => props.handleClick(n.unitId)}
+                  onClick={() => props.getUnitDetails(n.unitId)}
                   className={classes.rowRed} 
                   key={n.id}
                 >
