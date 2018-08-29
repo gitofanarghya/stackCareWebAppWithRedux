@@ -19,16 +19,8 @@ const requestOptions = {
     })
 };
 
-let buffer = []
 const checkTokenExpirationMiddleware = store => next => action => {
-    if (buffer.length > 20) {
-        buffer.splice(0, buffer.length - 20);
-    }
-    buffer.push(action)
-    console.log(buffer)
     if(action.type === INVALID_ACCESS_TOKEN) {
-        let pos = buffer.map(e => e.type).indexOf(INVALID_ACCESS_TOKEN) - 1;
-        let previousRequest = buffer[pos];
         store.dispatch(request())
         fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
             .then(response => response.json())
@@ -48,11 +40,16 @@ const checkTokenExpirationMiddleware = store => next => action => {
         const token_expiration =
         JSON.parse(localStorage.getItem("user")) &&
         JSON.parse(localStorage.getItem("user"))["access_expiration"];
-        const d = new Date(token_expiration + 'Z')   
+        const refresh_expiration = 
+        JSON.parse(localStorage.getItem("user")) &&
+        JSON.parse(localStorage.getItem("user"))["refresh_expiration"];
+        const a = new Date(token_expiration + 'Z')   
+        const r = new Date(refresh_expiration + 'Z')
         const now = new Date()
-        if (d < now) {
-            console.log("expired")
+        if (a < now < r) {
             store.dispatch({ type: INVALID_ACCESS_TOKEN })
+        } else if(r < now) {
+            localStorage.removeItem('user')
         } else {
             return next(action)
         }
