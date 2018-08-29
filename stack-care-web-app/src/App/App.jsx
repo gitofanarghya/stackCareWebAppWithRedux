@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { history } from '../_helpers';
 import { alertActions } from '../_actions';
-import { PrivateRoute } from '../_components';
+import { PrivateRoute, Loading } from '../_components';
 import { HomePage } from '../HomePage';
 import { LoginPage } from '../LoginPage';
 import { RegisterPage } from '../RegisterPage';
@@ -22,15 +22,14 @@ class App extends React.Component {
     }
 
     render() {
-        const { alert } = this.props;
-        return (
+        return ( 
             <Router history={history}>
                 <div className="h100">
                 <Switch>
-                    <PrivateRoute exact path="/" component={HomePage} />
+                    <PrivateRoute exact path="/" component={HomePage} refreshed={this.props.refreshed} />
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/register" component={RegisterPage} />
-                    <PrivateRoute exact path="/:id" component={CommunityPage} />
+                    <PrivateRoute exact path="/:id" component={CommunityPage} refreshed={this.props.refreshed} />
                 </Switch>
                 </div>
             </Router>
@@ -39,9 +38,9 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { alert } = state;
+    const { refreshed } = state.authentication;
     return {
-        alert
+        refreshed
     };
 }
 

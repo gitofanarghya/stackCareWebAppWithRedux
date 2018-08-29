@@ -1,8 +1,10 @@
 import { communityConstants } from '../_constants';
 
+let user = JSON.parse(localStorage.getItem('user'));
+
 const initialState = {
   requesting: false,
-  allCommunities: null,
+  allCommunities: user ? user.allCommunities : null,
   loaded: false
 }
 

@@ -31,7 +31,10 @@ function handleResponse(response) {
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
-
+        localStorage.setItem('user', JSON.stringify({
+            ...JSON.parse(localStorage.getItem('user')),
+            allCommunities: data
+        }))
         return data;
     });
 }

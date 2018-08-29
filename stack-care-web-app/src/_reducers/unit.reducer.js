@@ -4,7 +4,6 @@ const initialState = {
   requesting: false,
   allUnits: null,
   loaded: false,
-  selectedUnit: null,
   loadedUnitDetails: false,
   selectedUnitId: null,
   loadedCurrentZone: false,
@@ -24,14 +23,13 @@ export function units(state, action) {
         selectedCommunityId: action.id
       };
     case unitConstants.GET_ALL_UNITS_SUCCESS:
-      const units = {
-        [state.selectedCommunityId]: action.allUnits
-      }
-      const allUnits = state.allUnits === null ? units : {...state.allUnitsunits, units}
       return {
         ...state,
         requesting: false,  
-        allUnits: allUnits,
+        allUnits: {
+          ...state.allUnits,
+          [state.selectedCommunityId]: action.allUnits
+        },
         loaded: true
       };
     case unitConstants.GET_ALL_UNITS_FAILURE:
@@ -44,7 +42,9 @@ export function units(state, action) {
     case unitConstants.SET_UNIT:
       return {
         ...state,
-        selectedUnit: state.allUnits[state.selectedCommunityId].find(unit => unit.id === action.id)
+        selectedUnitId: action.id,
+        loadedUnitDetails: false,
+        loadedCurrentZone: false,
       };
     case unitConstants.UNITS_FOUND_IN_CACHE:
       return {
@@ -63,6 +63,7 @@ export function units(state, action) {
         ...state,
         requesting: true,
         loadedUnitDetails: false,
+        loadedCurrentZone: false,
         selectedUnitId: action.id
       };
     case unitConstants.GET_UNIT_DETAILS_SUCCESS:
@@ -96,7 +97,10 @@ export function units(state, action) {
       return {
         ...state,
         selectedCommunityId: action.id,
-        loaded: false
+        loaded: false,
+        loadedCurrentZone: false,
+        loadedUnitDetails: false,
+        selectedUnitId: null
       };
     default:
       return state

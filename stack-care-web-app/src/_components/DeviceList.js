@@ -5,7 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Loading from './Loading'
+import { Loading } from './Loading'
 import { Grid } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -38,81 +38,21 @@ const styles = theme => ({
 class DeviceList extends React.Component {
   state = {
     value: 0,
-    isLoading: true,
-    zones: null,
-    bulbs: null,
-    sensors: null,
-    switches: null,
-    currentZone: null,
-    unit: null,
     open: false,
     device: null
   };
 
+  componentDidUpdate(prevProps) {
+      if(this.props.unit !== prevProps.unit) {
+          this.setState({
+              value: 0
+          })
+      }
+  }
+
   handleChange = (event, value) => {
     this.setState({ value });
   };
-
-  setZoneDetails(zoneId, bulbs, sensors, switches, rest) {
-    this.setState({
-        currentZone: {
-            zoneId: zoneId,
-            bulbs: bulbs.filter(bulb => bulb.zone_id === zoneId),
-            sensors: sensors.filter(sensor => sensor.zone_id === zoneId),
-            switches: switches.filter(swtch => swtch.zone_id === zoneId)
-        },
-        isLoading: false,
-        ...rest
-    }) 
-  }
-
-  setCurrentZoneDetails(zoneId) {
-    this.setState({
-        currentZone: {
-            zoneId: zoneId,
-            bulbs: this.state.bulbs.filter(bulb => bulb.zone_id === zoneId),
-            sensors: this.state.sensors.filter(sensor => sensor.zone_id === zoneId),
-            switches: this.state.switches.filter(swtch => swtch.zone_id === zoneId)
-        }
-    })
-  }
-
-  request = async (options, unit) => {
-    const zoneres = await fetch( `https://dm-dot-care-api-staging.appspot.com/sites/${unit.unitId}/zones`, options)
-    const zones = await zoneres.json()
-    const bulbres = await fetch( `https://dm-dot-care-api-staging.appspot.com/sites/${unit.unitId}/bulbs`, options)
-    const bulbs = await bulbres.json()
-    const sensorres = await fetch( `https://dm-dot-care-api-staging.appspot.com/sites/${unit.unitId}/sensors`, options)
-    const sensors = await sensorres.json()
-    const switchres = await fetch( `https://dm-dot-care-api-staging.appspot.com/sites/${unit.unitId}/switches`, options)
-    const switches = await switchres.json()
-    const rest = {
-        zones: zones,
-        bulbs: bulbs,
-        sensors: sensors,  
-        switches: switches,
-        unit: unit
-    }
-    this.setZoneDetails(zones[0].id, bulbs, sensors, switches, rest)
-  }
-
-  componentDidMount() {
-    
-    let { unit, accessToken } = this.props
-    let options = {
-        method: "GET",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "omit",
-        headers: {
-            "Content-Type": "application/json; charset=utf-8",
-            "Authorization": `Bearer ${accessToken}`
-        },
-        body: null,
-    }
-    this.request(options, unit)
-    
-  }
 
   handleClickOpen = () => {
     this.setState({ open: true });
@@ -128,40 +68,13 @@ class DeviceList extends React.Component {
           device: device
       })
   }
-
-  componentDidUpdate(prevProps) {
-      
-    let { unit, accessToken } = this.props
-    if(this.state.isLoading) {      
-        let options = {
-            method: "GET",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "omit",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                "Authorization": `Bearer ${accessToken}`
-            },
-            body: null,
-        }
-        this.request(options, this.state.unit)
-        
-    } else {
-        if (unit.unitId !== prevProps.unit.unitId) {
-            this.setState({
-                isLoading: true,
-                unit: unit
-            })
-        }
-    }
-  }
     
   render() {
     const { classes } = this.props;
     const { value } = this.state;
 
     return (
-        this.state.isLoading ? <Loading /> : 
+        !this.props.loadedCurrentZone ? <Loading /> : 
         <div className={classes.root}>
             <AppBar position="static" color="default">
               <Tabs
@@ -172,14 +85,15 @@ class DeviceList extends React.Component {
                 scrollable
                 scrollButtons="auto"
               >
-                {this.state.zones.map(n => <Tab  key={n.id} onClick={() => this.setCurrentZoneDetails(n.id)} label={<Typography variant="subheading">{n.name}</Typography>} />)}
+                {this.props.unit.unitDetails.zones.map(n => <Tab  key={n.id} onClick={() => this.props.setCurrentZone(n.id)} label={<Typography variant="subheading">{n.name}</Typography>} />)}
               </Tabs>
             </AppBar>
             <TabContainer>
                 {
-                    this.state.isLoading ? <Loading /> : <Zone currentZone={this.state.currentZone} setDevice={this.setDevice}/>
+                    !this.props.loadedCurrentZone ? <Loading /> : <Zone currentZone={this.props.currentZone} setDevice={this.setDevice}/>
                 }
             </TabContainer>
+            {this.state.open ?
             <div>
                 <Dialog
                     open={this.state.open}
@@ -190,29 +104,25 @@ class DeviceList extends React.Component {
                     aria-describedby="alert-dialog-slide-description"
                 >
                 <DialogTitle id="alert-dialog-slide-title">
-                    {this.state.unit.name ? this.state.unit.name : 'nothing' }
+                    {this.props.unit.name}
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-slide-description">
-                    {this.state.device ? 
                     <center>
-                    <div>
-                        <Typography>Device ID: {this.state.device.id}</Typography>
-                        <Typography>Mac ID: {this.state.device.mac_address}</Typography>
-                        <Typography>Net Address: {this.state.device.network_address}</Typography>
+                    <DialogContentText id="alert-dialog-slide-description">
+                        <span>Device ID: {this.state.device.id}</span><br />
+                        <span>Mac ID: {this.state.device.mac_address}</span><br />
+                        <span>Net Address: {this.state.device.network_address}</span><br />
                         <br />
-                        <Typography>Manu: {this.state.device.manufacturer}</Typography>
-                        <Typography>Model: {this.state.device.model}</Typography>
-                        <Typography>HW ver: {this.state.device.hw_vs}</Typography>
-                        <Typography>Firmware: {this.state.device.firmware_vs}</Typography>
+                        <span>Manu: {this.state.device.manufacturer}</span><br />
+                        <span>Model: {this.state.device.model}</span><br />
+                        <span>HW ver: {this.state.device.hw_vs}</span><br />
+                        <span>Firmware: {this.state.device.firmware_vs}</span><br />
                         <br />
-                        <Typography>Created: {this.state.device.created_at}</Typography>
-                        <Typography>Joined: {this.state.device.last_joined_at}</Typography>
-                        <Typography>Contact: {this.state.device.last_contact_time}</Typography>
-                    </div>
-                    </center>
-                        : 'nothing'}
+                        <span>Created: {this.state.device.created_at}</span><br />
+                        <span>Joined: {this.state.device.last_joined_at}</span><br />
+                        <span>Contact: {this.state.device.last_contact_time}</span><br />
                     </DialogContentText>
+                    </center>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose} color="primary">
@@ -221,6 +131,7 @@ class DeviceList extends React.Component {
                 </DialogActions>
                 </Dialog>
             </div>
+            : <div></div>}
         </div>
     );
   }
@@ -285,4 +196,5 @@ DeviceList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(DeviceList);
+const DeviceListWithStyles = withStyles(styles)(DeviceList);
+export {DeviceListWithStyles as DeviceList}

@@ -3,14 +3,23 @@ import Grid from '@material-ui/core/Grid'
 import classNames from 'classnames'
 import Typography from '@material-ui/core/Typography';
 import SiteList from '../_components/SiteList'
-import { Loading, SearchBar, NavBar } from '../_components';
+import { Loading, SearchBar, NavBar, DeviceList } from '../_components';
 import { unitActions } from '../_actions'
 import { connect } from 'react-redux'
 
 class CommunityPage extends React.Component {
 
     componentDidMount() {
-        this.props.getAllUnits(this.props.selectedCommunityId)
+        if(this.props.selectedCommunityId) {
+            this.props.getAllUnits(this.props.selectedCommunityId)
+        } else {
+            this.props.setCommunity(this.props.match.params.id)
+            this.props.getAllUnits(this.props.match.params.id)
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if(this.props.selectedCommunityId !== prevProps.selectedCommunityId) this.props.getAllUnits(this.props.selectedCommunityId)
     }
 
     render () {
@@ -34,7 +43,7 @@ class CommunityPage extends React.Component {
                                     </Grid>
                                     <Grid item sm={6} className={classNames("flex", "padded")}>
                                         {
-                                            //this.state.unit ? <DeviceList unit={} /> : <Placeholder />
+                                            this.props.selectedUnitId === null ? <Placeholder /> : <DeviceList setCurrentZone={this.props.setCurrentZone} loadedCurrentZone={this.props.loadedCurrentZone} currentZone={this.props.currentZone} unit={this.props.allUnits[this.props.selectedCommunityId].find(unit => unit.id === this.props.selectedUnitId)} />
                                         }
                                     </Grid>
                                 </Grid>
@@ -48,13 +57,16 @@ class CommunityPage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    const { loaded, allUnits, selectedCommunityId} = state.units
+    const { loaded, allUnits, selectedCommunityId, selectedUnitId, currentZone, loadedCurrentZone } = state.units
     const { allCommunities } = state.communities
     return {
         loaded,
         selectedCommunityId,
         allUnits,
-        allCommunities
+        allCommunities,
+        selectedUnitId,
+        currentZone,
+        loadedCurrentZone
     }
 }
 
@@ -68,6 +80,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     setCommunity: (id) => {
         dispatch(unitActions.setCommunity(id))
+    },
+    setCurrentZone: (id) => {
+        dispatch(unitActions.setCurrentZone(id))
     }
 })
 
