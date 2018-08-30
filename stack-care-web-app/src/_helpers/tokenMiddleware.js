@@ -26,9 +26,10 @@ const checkTokenExpirationMiddleware = store => next => action => {
             .then(response => response.json())
             .then(user => {
                 if (user.access_token) {
+                    var userObj = JSON.parse(localStorage.getItem('user'))
+                    user.allCommunities = userObj.allCommunities
                     localStorage.setItem('user', JSON.stringify(user));
                     store.dispatch(success(user))
-                    history.push(window.location)
                 }
             },
             error => {
@@ -46,7 +47,7 @@ const checkTokenExpirationMiddleware = store => next => action => {
         const a = new Date(token_expiration + 'Z')   
         const r = new Date(refresh_expiration + 'Z')
         const now = new Date()
-        if (a < now < r) {
+        if (a < now && now < r) {
             store.dispatch({ type: INVALID_ACCESS_TOKEN })
         } else if(r < now) {
             localStorage.removeItem('user')
