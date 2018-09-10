@@ -14,7 +14,7 @@ const requestOptions = {
     },
     body: JSON.stringify({
         "grant_type": "refresh_token",
-        "refresh_token": JSON.parse(localStorage.getItem('user')).refresh_token,
+        "refresh_token": localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).refresh_token : null,
         "client_id": "rTZ61c51XXJriPBSoGReIeZ7W7MjWy"
     })
 };

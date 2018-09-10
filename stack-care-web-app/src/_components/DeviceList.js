@@ -33,6 +33,13 @@ const styles = theme => ({
     width: '100%',
     backgroundColor: theme.palette.background.paper,
   },
+  scroll: {
+    maxWidth: 20
+  },
+  tabRoot: {
+    textTransform: "initial",
+    minWidth: 50,
+  }
 });
 
 class DeviceList extends React.Component {
@@ -84,8 +91,9 @@ class DeviceList extends React.Component {
                 textColor="primary"
                 scrollable
                 scrollButtons="auto"
+                classes={{scrollButtons: classes.scroll}} 
               >
-                {this.props.unit.unitDetails.zones.map(n => <Tab  key={n.id} onClick={() => this.props.setCurrentZone(n.id)} label={<Typography variant="subheading">{n.name}</Typography>} />)}
+                {this.props.unit.unitDetails.zones.map(n => <Tab classes={{ root: classes.tabRoot}} key={n.id} onClick={() => this.props.setCurrentZone(n.id)} label={<Typography variant="subheading">{n.name}</Typography>} />)}
               </Tabs>
             </AppBar>
             <TabContainer>

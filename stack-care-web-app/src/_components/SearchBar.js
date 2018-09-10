@@ -7,7 +7,6 @@ import NoSsr from '@material-ui/core/NoSsr';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    backgroundColor: '#424242',
     borderRadius: '5px',
     padding: '5px',
     margin: 'auto'
@@ -18,11 +17,13 @@ const customStyles = {
   control: (base, state) => ({
     ...base,
     border: "none",
-    backgroundColor: "#424242",
+    backgroundColor: "#ffffff",
+    minHeight: 50
   }),
   singleValue: (base, state) => ({
     ...base, 
-    color: "white"
+    color: "white",
+    border: "none",
   })
 }
 

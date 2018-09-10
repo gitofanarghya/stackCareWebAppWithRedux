@@ -18,20 +18,20 @@ class App extends React.Component {
             // clear alert on location change
             dispatch(alertActions.clear());
         });
-        this.eventsPoller = setInterval(this.props.dispatch(eventActions.getAllEvents()), 1)
     }
 
     componentDidMount() {
-        this.props.dispatch(eventActions.getAllEvents());
+        if(this.props.loggedIn) this.props.dispatch(eventActions.getAllEvents());
     }
 
     componentWillReceiveProps(prevProps) {
+        if (this.props.loggedIn !== prevProps.loggedIn) {
+            if(this.props.loggedIn) this.props.dispatch(eventActions.getAllEvents())
+        }
         if (this.props.loaded !== prevProps.loaded) {
 
             clearTimeout(this.timeout);
-
             // Optionally do something with data
-
             if (!prevProps.requesting) {
                 this.startPoll();
             }
@@ -39,7 +39,7 @@ class App extends React.Component {
     }
 
     startPoll() {
-        this.timeout = setTimeout(() => this.props.dispatch(eventActions.getAllEvents()), 30000);
+        this.timeout = setTimeout(() => this.props.dispatch(eventActions.getAllEvents()), 120000);
     }
     
     componentWillUnmount() {
@@ -63,12 +63,13 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { refreshed } = state.authentication;
+    const { refreshed, loggedIn } = state.authentication;
     const { loaded, requesting } = state.events
     return {
         refreshed,
         loaded,
-        requesting
+        requesting,
+        loggedIn
     };
 }
 

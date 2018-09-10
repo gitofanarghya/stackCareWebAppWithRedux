@@ -6,6 +6,7 @@ import SiteList from '../_components/SiteList'
 import { Loading, SearchBar, NavBar, DeviceList } from '../_components';
 import { unitActions } from '../_actions'
 import { connect } from 'react-redux'
+import { groupBy } from '../_helpers';
 
 class CommunityPage extends React.Component {
 
@@ -17,10 +18,27 @@ class CommunityPage extends React.Component {
             this.props.getAllUnits(this.props.match.params.id)
         }
     }
-
+    events = null
     componentDidUpdate(prevProps) {
+        console.log('events refreshed')
         if(this.props.selectedCommunityId !== prevProps.selectedCommunityId) this.props.getAllUnits(this.props.selectedCommunityId)
     }
+
+    returnColor = (unitId, classes) => {
+        if(this.props.allEvents) {
+            if(this.props.allEvents[unitId]) {
+            if(this.props.allEvents[unitId].pause_notification) {
+                return classes.rowOrange
+            } else {
+                return classes.rowRed
+            }
+            } else {
+            return classes.rowGreen
+            }
+        } else {
+            return classes.rowGreen
+        }
+    } 
 
     render () {
         return (
@@ -39,7 +57,7 @@ class CommunityPage extends React.Component {
                             <Grid item className={classNames("flex", "bottomGridContainer", "padded")}>
                                 <Grid container className="flex" alignItems="stretch" direction="row" justify="space-around">
                                     <Grid item sm={6} className={classNames("flex", "padded")}>
-                                        <SiteList units={this.props.allUnits[this.props.selectedCommunityId]} communityName={this.props.allCommunities.find(community => community.id === this.props.selectedCommunityId).name} getUnitDetails={this.props.getUnitDetails} />
+                                        <SiteList returnColor={this.returnColor} units={this.props.allUnits[this.props.selectedCommunityId]} communityName={this.props.allCommunities.find(community => community.id === this.props.selectedCommunityId).name} getUnitDetails={this.props.getUnitDetails} />
                                     </Grid>
                                     <Grid item sm={6} className={classNames("flex", "padded")}>
                                         {
@@ -59,6 +77,7 @@ class CommunityPage extends React.Component {
 const mapStateToProps = (state) => {
     const { loaded, allUnits, selectedCommunityId, selectedUnitId, currentZone, loadedCurrentZone } = state.units
     const { allCommunities } = state.communities
+    const { allEvents } = state.events
     return {
         loaded,
         selectedCommunityId,
@@ -66,8 +85,24 @@ const mapStateToProps = (state) => {
         allCommunities,
         selectedUnitId,
         currentZone,
-        loadedCurrentZone
+        loadedCurrentZone,
+        allEvents: eventsHandler(allEvents)
     }
+}
+
+const eventsHandler = (allEvents) => {
+    if(allEvents) {
+        let eventsByUnitId = groupBy(allEvents, 'unit_id' )
+        for (var key in eventsByUnitId) {
+            if (eventsByUnitId.hasOwnProperty(key)) {
+                eventsByUnitId[key] = groupBy(eventsByUnitId[key], 'event_type')
+            }
+        }
+        return eventsByUnitId
+    } else {
+        return null
+    }
+    
 }
 
 const mapDispatchToProps = (dispatch) => ({

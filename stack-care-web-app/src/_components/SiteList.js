@@ -20,13 +20,13 @@ const styles = theme => ({
     paddingLeft: 'unset !important'
   },
   rowRed: {
-    borderLeft: `red 4px solid`
+    borderLeft: `red 10px solid`
   },
   rowGreen: {
-    borderLeft: `green 4px solid`
+    borderLeft: `green 10px solid`
   },
   rowOrange: {
-    borderLeft: `orange 4px solid`
+    borderLeft: `orange 10px solid`
   },
   heading: {
     paddingLeft: '24px'
@@ -70,7 +70,7 @@ function SiteList(props) {
                 <TableRow 
                   hover
                   onClick={() => props.getUnitDetails(n.unitId)}
-                  className={classes.rowRed} 
+                  className={props.returnColor(n.unitId, classes)} 
                   key={n.id}
                 >
                     <TableCell component="th" scope="row" padding="dense">

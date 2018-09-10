@@ -1,4 +1,4 @@
-import { authHeader } from '../_helpers';
+import { authHeader, history } from '../_helpers';
 
 export const userService = {
     login,
@@ -30,6 +30,7 @@ function login(username, password) {
             if (user.access_token) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
+                window.location.reload(true)
             }
 
             return user;

@@ -20,7 +20,7 @@ function getAllCommunities() {
 
 function handleResponse(response) {
     return response.json().then(json => {
-        const data = json
+        const data = json.filter(community => community.name !== 'Test community') // filtering all test communities cause its irritating!!
         if (!response.ok) {
             if (response.status === 403) {
                 console.log("403")
