@@ -32,14 +32,14 @@ class HomePage extends React.Component {
                             <Grid item className={classNames("flex", "topGridContainer", "padded2x")}>
                                 <Grid container className="flex" alignItems="stretch" direction="row" justify="center">
                                     <Grid item sm={6} className={classNames("flex", "searchBarContainer")}>
-                                        <SearchBar allCommunities={allCommunities} getAllUnits={this.props.getAllUnits} />
+                                        <SearchBar allCommunities={allCommunities} setCommunity={this.props.setCommunity} />
                                     </Grid>
                                 </Grid>
                             </Grid>
                             <Grid item className={classNames("flex", "bottomGridContainer", "padded")}>
                                 <Grid container className="flex" alignItems="stretch" direction="row" justify="space-around">
                                     <Grid item sm={6} className={classNames("flex", "padded")}>
-                                        <CommunitiesStatus allCommunities={allCommunities} getAllUnits={this.props.getAllUnits} />
+                                        <CommunitiesStatus allCommunities={allCommunities} setCommunity={this.props.setCommunity} />
                                     </Grid>
                                     <Grid item sm={6} className={classNames("flex", "padded")}>
                                         <Grid container className="flex" alignItems="stretch" direction="column" justify="space-around">
@@ -80,9 +80,8 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    getAllUnits: (id) => {
-        dispatch(communityActions.setCommunity(id))
-        dispatch(unitActions.getAllUnits(id))
+    setCommunity: (id) => {
+        dispatch(unitActions.setCommunity(id))
     },
     getAllCommunities: () => {
         dispatch(communityActions.getAllCommunities())

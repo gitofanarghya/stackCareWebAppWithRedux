@@ -2,7 +2,7 @@ import React from 'react'
 import Highcharts from 'highcharts'
 import HC_map from 'highcharts/modules/map'
 import HighchartsReact from 'highcharts-react-official'
-import mapData from './usa-and-canada'
+import mapData from './usa'
 import proj4 from 'proj4'
 import orange from '@material-ui/core/colors/orange';
 

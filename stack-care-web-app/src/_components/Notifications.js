@@ -1,7 +1,7 @@
 import React from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import './dark-highchart-theme'
+import './light-highchart-theme'
 
 const options = {
   chart: {

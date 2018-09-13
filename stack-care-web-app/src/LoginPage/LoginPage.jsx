@@ -8,7 +8,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { withStyles } from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
-import { NavBar } from '../_components';
+import { NavBar, Loading } from '../_components';
 import Grid from '@material-ui/core/Grid';
 import classNames from 'classnames';
 
@@ -58,7 +58,7 @@ class LoginPage extends React.Component {
 
     render() {
         const { loggingIn, classes } = this.props;
-        return (
+        return ( loggingIn ? <Loading /> :
             <NavBar>
             <Grid container className={classNames("App", "flex")} alignItems="center" direction="row" justify="center">
               <Grid sm={6} item className={classNames("flex", "loginpiccontainer")}>

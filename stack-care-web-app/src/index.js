@@ -8,12 +8,12 @@ import './index.css'
 
 const theme = createMuiTheme({
     palette: {
-      type: 'dark',
+      type: 'light',
       primary: {
         main: "#000000"
       },
       secondary: {
-        main: "#008b8b",
+        main: "#485362",
       }
     }
   });

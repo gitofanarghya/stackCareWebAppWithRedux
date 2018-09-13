@@ -1,10 +1,10 @@
 import { authHeader } from '../_helpers';
 
-export const communityService = {
-    getAllCommunities
+export const eventService = {
+    getAllEvents
 };
 
-function getAllCommunities() {
+function getAllEvents() {
     const requestOptions = {
         method: "GET",
         mode: "cors",
@@ -14,13 +14,13 @@ function getAllCommunities() {
         body: null
     };
 
-    return fetch(`https://care-api-staging.appspot.com/communities?get_all=1`, requestOptions)
+    return fetch(`https://care-api-staging.appspot.com/events?get_all=1&status=unassigned,assigned&limit=500`, requestOptions)
         .then(handleResponse)
 }
 
 function handleResponse(response) {
     return response.json().then(json => {
-        const data = json.filter(community => community.name !== 'Test community') // filtering all test communities cause its irritating!!
+        const data = json
         if (!response.ok) {
             if (response.status === 403) {
                 console.log("403")
@@ -31,10 +31,6 @@ function handleResponse(response) {
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
-        localStorage.setItem('user', JSON.stringify({
-            ...JSON.parse(localStorage.getItem('user')),
-            allCommunities: data
-        }))
         return data;
     });
 }

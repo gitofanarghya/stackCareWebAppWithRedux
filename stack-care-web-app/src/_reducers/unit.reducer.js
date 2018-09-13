@@ -4,10 +4,10 @@ const initialState = {
   requesting: false,
   allUnits: null,
   loaded: false,
-  selectedUnit: null,
-  selectedCommunityId: null,
   loadedUnitDetails: false,
-  selectedUnitId: null
+  selectedUnitId: null,
+  loadedCurrentZone: false,
+  currentZone: null
 }
 
 export function units(state, action) {
@@ -23,14 +23,13 @@ export function units(state, action) {
         selectedCommunityId: action.id
       };
     case unitConstants.GET_ALL_UNITS_SUCCESS:
-      const units = {
-        [state.selectedCommunityId]: action.allUnits
-      }
-      const allUnits = state.allUnits === null ? units : {...state.allUnitsunits, units}
       return {
         ...state,
         requesting: false,  
-        allUnits: allUnits,
+        allUnits: {
+          ...state.allUnits,
+          [state.selectedCommunityId]: action.allUnits
+        },
         loaded: true
       };
     case unitConstants.GET_ALL_UNITS_FAILURE:
@@ -43,7 +42,9 @@ export function units(state, action) {
     case unitConstants.SET_UNIT:
       return {
         ...state,
-        selectedUnit: state.allUnits[state.selectedCommunityId].find(unit => unit.id === action.id)
+        selectedUnitId: action.id,
+        loadedUnitDetails: false,
+        loadedCurrentZone: false,
       };
     case unitConstants.UNITS_FOUND_IN_CACHE:
       return {
@@ -55,13 +56,14 @@ export function units(state, action) {
       return {
         ...state,
         requesting:false,
-        loaded: true
+        loadedUnitDetails: true
       }
     case unitConstants.GET_UNIT_DETAILS_REQUEST:
       return {
         ...state,
         requesting: true,
         loadedUnitDetails: false,
+        loadedCurrentZone: false,
         selectedUnitId: action.id
       };
     case unitConstants.GET_UNIT_DETAILS_SUCCESS:
@@ -80,6 +82,26 @@ export function units(state, action) {
         error: action.error,
         loadedUnitDetails: false
       }
+    case unitConstants.SET_CURRENT_ZONE:
+      return {
+        ...state,
+        loadedCurrentZone: true,
+        currentZone: {
+          zoneId: action.id,
+          bulbs: state.allUnits[state.selectedCommunityId].find(unit => unit.id === state.selectedUnitId).unitDetails.bulbs.filter(bulb => bulb.zone_id === action.id),
+          sensors: state.allUnits[state.selectedCommunityId].find(unit => unit.id === state.selectedUnitId).unitDetails.sensors.filter(sensor => sensor.zone_id === action.id),
+          switches: state.allUnits[state.selectedCommunityId].find(unit => unit.id === state.selectedUnitId).unitDetails.switches.filter(swtch => swtch.zone_id === action.id)
+        }
+      }
+    case unitConstants.SET_COMMUNITY:
+      return {
+        ...state,
+        selectedCommunityId: action.id,
+        loaded: false,
+        loadedCurrentZone: false,
+        loadedUnitDetails: false,
+        selectedUnitId: null
+      };
     default:
       return state
   }
