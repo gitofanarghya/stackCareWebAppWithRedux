@@ -9,7 +9,7 @@ function getAllEvents() {
         method: "GET",
         mode: "cors",
         cache: "no-cache",
-        credentials: "omit",
+        credentials: "include",
         headers: authHeader(),
         body: null
     };
