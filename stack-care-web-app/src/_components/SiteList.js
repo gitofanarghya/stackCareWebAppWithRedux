@@ -20,13 +20,13 @@ const styles = theme => ({
     paddingLeft: 'unset !important'
   },
   rowRed: {
-    borderLeft: `red 20px solid`
+    borderLeft: `red 10px solid`
   },
   rowGreen: {
-    borderLeft: `green 20px solid`
+    borderLeft: `green 10px solid`
   },
   rowOrange: {
-    borderLeft: `orange 20px solid`
+    borderLeft: `orange 10px solid`
   },
   heading: {
     paddingLeft: '24px'
