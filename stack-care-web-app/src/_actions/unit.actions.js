@@ -38,7 +38,7 @@ function getAllUnits(id) {
 }
 
 function setUnit(id) {
-    return (dispatch) => {
+    return dispatch => {
         dispatch(request(id))
     }
 
