@@ -23,7 +23,7 @@ function login(username, password) {
         })
     };
 
-    return fetch(`https://care-api-staging.appspot.com/oauth2/tokens`, requestOptions)
+    return fetch(`https://care-api-prod.appspot.com/oauth2/tokens`, requestOptions)
         .then(handleResponse)
         .then(user => {
             // login successful if there's a jwt token in the response

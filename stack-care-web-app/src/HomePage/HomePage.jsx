@@ -14,7 +14,7 @@ class HomePage extends React.Component {
     }
 
     render() {
-        const { allCommunities, loaded } = this.props;
+        const { allCommunities, loaded, loadedEvents, eventsWithCommunityId } = this.props;
 
         /*
         <Grid item sm={2} className={classNames("flex", "refreshContainer")}>
@@ -39,12 +39,12 @@ class HomePage extends React.Component {
                             <Grid item className={classNames("flex", "bottomGridContainer", "padded")}>
                                 <Grid container className="flex" alignItems="stretch" direction="row" justify="space-around">
                                     <Grid item sm={6} className={classNames("flex", "padded")}>
-                                        <CommunitiesStatus allCommunities={allCommunities} setCommunity={this.props.setCommunity} />
+                                        {loadedEvents ? <CommunitiesStatus eventsWithCommunity={eventsWithCommunityId} allCommunities={allCommunities} setCommunity={this.props.setCommunity} /> : <Loading />}
                                     </Grid>
                                     <Grid item sm={6} className={classNames("flex", "padded")}>
                                         <Grid container className="flex" alignItems="stretch" direction="column" justify="space-around">
                                             <Grid item sm className={classNames("flex", "mapContainer")}>
-                                                <Map />
+                                                <Map setCommunity={this.props.setCommunity}/>
                                             </Grid>
                                             <Grid item sm className={classNames("flex", "graphDiv")}>
                                                 <Grid container className={classNames("flex", "graphContainer")} alignItems="stretch" direction="column" justify="space-around">
@@ -54,7 +54,7 @@ class HomePage extends React.Component {
                                                         </Typography>
                                                     </Grid>
                                                     <Grid item sm className="flex">
-                                                        <Notifications />
+                                                    {loadedEvents ? <Notifications eventsWithCommunityId={eventsWithCommunityId}/> : <Loading />}
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
@@ -73,9 +73,12 @@ class HomePage extends React.Component {
 
 function mapStateToProps(state) {
     const { loaded, allCommunities } = state.communities;
+    const { loadedEvents, eventsWithCommunityId } = state.events;
     return {
         allCommunities,
-        loaded
+        loaded,
+        loadedEvents,
+        eventsWithCommunityId
     };
 }
 

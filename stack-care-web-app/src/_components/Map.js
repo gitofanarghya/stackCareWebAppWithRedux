@@ -3,12 +3,13 @@ import Highcharts from 'highcharts'
 import HC_map from 'highcharts/modules/map'
 import HighchartsReact from 'highcharts-react-official'
 import mapData from './usa'
+import { markersData } from '../_helpers'
 import proj4 from 'proj4'
 import orange from '@material-ui/core/colors/orange';
 
 HC_map(Highcharts)
 
-export const Map = ({markersData}) => {
+export const Map = (props) => {
   window.proj4 = proj4
 
   const markers = markersData ? markersData : null
@@ -31,6 +32,18 @@ export const Map = ({markersData}) => {
       headerFormat: '',
       pointFormat: '<b>{point.name}</b><br>Lat: {point.lat}, Lon: {point.lon}'
     },
+
+    plotOptions: {
+      series: {
+          point: {
+              events: {
+                  click: function () {
+                      props.setCommunity(this.id)
+                  }
+              }
+          }
+      }
+  },
   
     series: [{
       name: 'Basemap',

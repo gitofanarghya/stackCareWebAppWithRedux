@@ -17,7 +17,7 @@ function getAllUnits(id) {
         body: null
     };
 
-    return fetch(`https://care-api-staging.appspot.com/units?community_id=${id}`, requestOptions)
+    return fetch(`https://care-api-prod.appspot.com/units?community_id=${id}`, requestOptions)
         .then(handleResponse)
     
 }
@@ -38,13 +38,13 @@ function getUnitDetails(id) {
 }
 
 const requestUnitDetails = async (options, id) => {
-    const zoneres = await fetch( `https://dm-dot-care-api-staging.appspot.com/sites/${id}/zones`, options)
+    const zoneres = await fetch( `https://dm-dot-care-api-prod.appspot.com/sites/${id}/zones`, options)
     const zones = await zoneres.json()
-    const bulbres = await fetch( `https://dm-dot-care-api-staging.appspot.com/sites/${id}/bulbs`, options)
+    const bulbres = await fetch( `https://dm-dot-care-api-prod.appspot.com/sites/${id}/bulbs`, options)
     const bulbs = await bulbres.json()
-    const sensorres = await fetch( `https://dm-dot-care-api-staging.appspot.com/sites/${id}/sensors`, options)
+    const sensorres = await fetch( `https://dm-dot-care-api-prod.appspot.com/sites/${id}/sensors`, options)
     const sensors = await sensorres.json()
-    const switchres = await fetch( `https://dm-dot-care-api-staging.appspot.com/sites/${id}/switches`, options)
+    const switchres = await fetch( `https://dm-dot-care-api-prod.appspot.com/sites/${id}/switches`, options)
     const switches = await switchres.json()
     return {
         zones: zones,

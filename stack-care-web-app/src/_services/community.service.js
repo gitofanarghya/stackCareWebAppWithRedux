@@ -14,7 +14,7 @@ function getAllCommunities() {
         body: null
     };
 
-    return fetch(`https://care-api-staging.appspot.com/communities?get_all=1`, requestOptions)
+    return fetch(`https://care-api-prod.appspot.com/communities?get_all=1`, requestOptions)
         .then(handleResponse)
 }
 

@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import StatusIcon from './StatusIcon';
 import Typography from '@material-ui/core/Typography'
 import sort_by from '../_helpers/sorter'
+import { unitCountByCommunity } from '../_helpers'
 
 const styles = theme => ({
   root: {
@@ -32,16 +33,25 @@ class Communities extends React.Component {
   }
 
   render() {
-    const {classes, allCommunities} = this.props;
+    const {classes, allCommunities, eventsWithCommunity} = this.props;
     let id = 0
-    const data = allCommunities.map(community => ({
-      id: id++,
-      name: community.name,
-      Hub: this.getRandomInt(3),
-      Device: this.getRandomInt(3),
-      Battery: this.getRandomInt(3),
-      commId: community.id
-    })).sort(sort_by('Hub', 'Device', 'Battery'));
+    const data = allCommunities.map(community => {
+      const communityEvents = eventsWithCommunity.filter(e => e.community_id === community.id)
+      const hubEventsCount = communityEvents.filter(e => e.event_type === 'hub_offline').length
+      const hub = hubEventsCount === 0 ? 2 : hubEventsCount < unitCountByCommunity.find(c => c.communityId === community.id).unitCount*0.1 ? 1 : 0
+      const deviceEventsCount = communityEvents.filter(e => e.event_type === 'device_offline').length
+      const device = deviceEventsCount === 0 ? 2 : deviceEventsCount < unitCountByCommunity.find(c => c.communityId === community.id).unitCount*0.2 ? 1 : 0
+      const batteryEventsCount = communityEvents.filter(e => e.event_type === 'battery_low').length
+      const battery = batteryEventsCount === 0 ? 2 : batteryEventsCount < unitCountByCommunity.find(c => c.communityId === community.id).unitCount*0.5 ? 1 : 0
+      return {
+        id: id++,
+        name: community.name,
+        Hub: hub,
+        Device: device,
+        Battery: battery,
+        commId: community.id
+      }
+    }).sort(sort_by('Hub', 'Device', 'Battery'));
 
     return (
       <Paper className={classes.root}>
