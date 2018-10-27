@@ -21,7 +21,7 @@ class CommunityPage extends React.Component {
     events = null
     componentDidUpdate(prevProps) {
         console.log('events refreshed')
-        if(this.props.selectedCommunityId !== prevProps.selectedCommunityId) this.props.getAllUnits(this.props.selectedCommunityId)
+        if(prevProps.selectedCommunityId !== undefined && this.props.selectedCommunityId !== prevProps.selectedCommunityId) this.props.getAllUnits(this.props.selectedCommunityId)
     }
 
     returnColor = (unitId, classes) => {
@@ -61,7 +61,7 @@ class CommunityPage extends React.Component {
                                     </Grid>
                                     <Grid item sm={6} className={classNames("flex", "padded")}>
                                         {
-                                            this.props.selectedUnitId === null ? <Placeholder /> : <DeviceList setCurrentZone={this.props.setCurrentZone} loadedCurrentZone={this.props.loadedCurrentZone} currentZone={this.props.currentZone} unit={this.props.allUnits[this.props.selectedCommunityId].find(unit => unit.id === this.props.selectedUnitId)} />
+                                            !this.props.selectedUnitId ? <Placeholder /> : <DeviceList setCurrentZone={this.props.setCurrentZone} loadedCurrentZone={this.props.loadedCurrentZone} currentZone={this.props.currentZone} unit={this.props.allUnits[this.props.selectedCommunityId].find(unit => unit.id === this.props.selectedUnitId)} />
                                         }
                                     </Grid>
                                 </Grid>
