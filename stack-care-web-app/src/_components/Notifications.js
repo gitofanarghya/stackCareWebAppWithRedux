@@ -58,7 +58,14 @@ export function Notifications(props) {
       name: 'Notifications',
       data: (function () {
         var finalData = []
-        var data = groupBy(props.eventsWithCommunityId, 'time_created')
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        var cat = props.eventsWithCommunityId.map(e => ({
+          ...e,
+          day: new Date(e.time_created).getDate() + ' ' + monthNames[new Date(e.time_created).getMonth()] + ' ' + new Date(e.time_created).getFullYear()
+        }))
+        var data = groupBy(cat, 'day')
         for (var key in data) {
           if (data.hasOwnProperty(key)) {
             finalData.push([
@@ -66,7 +73,6 @@ export function Notifications(props) {
             ])
           }
         }
-        console.log(finalData)
         return finalData;
       }())
     }]

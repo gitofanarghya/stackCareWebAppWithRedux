@@ -93,7 +93,7 @@ class DeviceList extends React.Component {
                 scrollButtons="auto"
                 classes={{scrollButtons: classes.scroll}} 
               >
-                {this.props.unit.unitDetails.zones.map(n => <Tab classes={{ root: classes.tabRoot}} key={n.id} onClick={() => this.props.setCurrentZone(n.id)} label={<Typography variant="subheading">{n.name}</Typography>} />)}
+                {this.props.zones.map(n => <Tab classes={{ root: classes.tabRoot}} key={n.id} onClick={() => this.props.setCurrentZone(n.id)} label={<Typography variant="subheading">{n.name}</Typography>} />)}
               </Tabs>
             </AppBar>
             <TabContainer>

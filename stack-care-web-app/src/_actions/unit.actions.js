@@ -6,7 +6,7 @@ import { history } from '../_helpers';
 export const unitActions = {
     getAllUnits,
     setUnit,
-    getUnitDetails,
+    getAllUnitDetails,
     setCurrentZone,
     setCommunity
 };
@@ -22,6 +22,7 @@ function getAllUnits(id) {
                 .then(
                     allUnits => { 
                         dispatch(success(allUnits));
+                        dispatch(getAllUnitDetails(allUnits))
                     },
                     error => {
                         dispatch(failure(error.toString()));
@@ -38,37 +39,38 @@ function getAllUnits(id) {
 }
 
 function setUnit(id) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         dispatch(request(id))
+        dispatch(setCurrentZone(getState().units.zones.filter(z => z.site_id === id)[0].id))
     }
 
     function request(id) { return { type: unitConstants.SET_UNIT, id } }
 }
 
-function getUnitDetails(id) {
+function getAllUnitDetails(allUnits) {
     return (dispatch, getState) => {
-        if(getState().units.allUnits[getState().units.selectedCommunityId].find(unit => unit.id === id).unitDetails) {
+        if(false) {//getState().units.allUnitsDetails[getState().units.selectedCommunityId]) {
             dispatch(foundInCache())
-            dispatch(setCurrentZone(getState().units.allUnits[getState().units.selectedCommunityId].find(unit => unit.id === id).unitDetails.zones[0].id))
+            //dispatch(setCurrentZone(getState().units.allUnits[getState().units.selectedCommunityId].find(unit => unit.id === id).unitDetails.zones[0].id))
         } else {
-            dispatch(request(id))
-            unitService.getUnitDetails(id)
-                .then(
-                    unitDetails => { 
-                        dispatch(success(unitDetails));
-                        dispatch(setCurrentZone(unitDetails.zones[0].id));
+            dispatch(request())
+            unitService.getAllUnitDetails(allUnits)
+            /*    .then(
+                    allUnitsDetails => {
+                        dispatch(success(allUnitsDetails));
+                        //dispatch(setCurrentZone(unitDetails.zones[0].id));
                     },
                     error => {
                         dispatch(failure(error.toString()));
                         dispatch(alertActions.error(error.toString()));
                     }
-                );
+                );*/
         }
     } 
     function foundInCache() { return { type: unitConstants.UNIT_DETAILS_FOUND_IN_CACHE } }
-    function request(id) { return { type: unitConstants.GET_UNIT_DETAILS_REQUEST, id } }
-    function success(unitDetails) { return { type: unitConstants.GET_UNIT_DETAILS_SUCCESS, unitDetails } }
-    function failure(error) { return { type: unitConstants.GET_UNIT_DETAILS_FAILURE, error } }
+    function request() { return { type: unitConstants.GET_ALL_UNIT_DETAILS_REQUEST } }
+    function success(unitDetails) { return { type: unitConstants.GET_ALL_UNIT_DETAILS_SUCCESS, unitDetails } }
+    function failure(error) { return { type: unitConstants.GET_ALL_UNIT_DETAILS_FAILURE, error } }
 }
 
 function setCurrentZone(id) {

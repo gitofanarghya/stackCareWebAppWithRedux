@@ -7,7 +7,11 @@ const initialState = {
   loadedUnitDetails: false,
   selectedUnitId: null,
   loadedCurrentZone: false,
-  currentZone: null
+  currentZone: null,
+  zones: [],
+  bulbs: [],
+  switches: [],
+  sensors: []
 }
 
 export function units(state, action) {
@@ -43,14 +47,14 @@ export function units(state, action) {
       return {
         ...state,
         selectedUnitId: action.id,
-        loadedUnitDetails: false,
         loadedCurrentZone: false,
       };
     case unitConstants.UNITS_FOUND_IN_CACHE:
       return {
         ...state,
         requesting: false,
-        loaded: true
+        loaded: true,
+        loadedUnitDetails: true
       };
     case unitConstants.UNIT_DETAILS_FOUND_IN_CACHE:
       return {
@@ -58,24 +62,20 @@ export function units(state, action) {
         requesting:false,
         loadedUnitDetails: true
       }
-    case unitConstants.GET_UNIT_DETAILS_REQUEST:
+    case unitConstants.GET_ALL_UNIT_DETAILS_REQUEST:
       return {
         ...state,
         requesting: true,
         loadedUnitDetails: false,
-        loadedCurrentZone: false,
-        selectedUnitId: action.id
+        loadedCurrentZone: false
       };
-    case unitConstants.GET_UNIT_DETAILS_SUCCESS:
-      const a = state.allUnits
-      a[state.selectedCommunityId].find(unit => unit.id === state.selectedUnitId).unitDetails = action.unitDetails
+    case unitConstants.GET_ALL_UNIT_DETAILS_SUCCESS:
       return {
         ...state,
-        requesting: false,  
-        allUnits: a,
+        requesting: false,
         loadedUnitDetails: true
       };
-    case unitConstants.GET_UNIT_DETAILS_FAILURE:
+    case unitConstants.GET_ALL_UNIT_DETAILS_FAILURE:
       return {
         ...state,
         requesting: false,
@@ -88,9 +88,9 @@ export function units(state, action) {
         loadedCurrentZone: true,
         currentZone: {
           zoneId: action.id,
-          bulbs: state.allUnits[state.selectedCommunityId].find(unit => unit.id === state.selectedUnitId).unitDetails.bulbs.filter(bulb => bulb.zone_id === action.id),
-          sensors: state.allUnits[state.selectedCommunityId].find(unit => unit.id === state.selectedUnitId).unitDetails.sensors.filter(sensor => sensor.zone_id === action.id),
-          switches: state.allUnits[state.selectedCommunityId].find(unit => unit.id === state.selectedUnitId).unitDetails.switches.filter(swtch => swtch.zone_id === action.id)
+          bulbs: state.bulbs.filter(bulb => bulb.zone_id === action.id),
+          sensors: state.sensors.filter(sensor => sensor.zone_id === action.id),
+          switches: state.switches.filter(swtch => swtch.zone_id === action.id)
         }
       }
     case unitConstants.SET_COMMUNITY:
@@ -102,6 +102,26 @@ export function units(state, action) {
         loadedUnitDetails: false,
         selectedUnitId: null
       };
+    case unitConstants.GET_ALL_ZONES_SUCCESS:
+      return {
+        ...state,
+        zones: [...state.zones, ...action.result]
+      }
+    case unitConstants.GET_ALL_BULBS_SUCCESS:
+      return {
+        ...state,
+        bulbs: [...state.bulbs, ...action.result]
+      }
+    case unitConstants.GET_ALL_SENSORS_SUCCESS:
+      return {
+        ...state,
+        sensors: [...state.sensors, ...action.result]
+      }
+    case unitConstants.GET_ALL_SWITCHES_SUCCESS:
+      return {
+        ...state,
+        switches: [...state.switches, ...action.result]
+      }
     default:
       return state
   }

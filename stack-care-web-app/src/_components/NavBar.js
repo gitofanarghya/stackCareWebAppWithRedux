@@ -14,10 +14,6 @@ const styles = {
     flexGrow: 1,
     height: '100%'
   },
-  home: {
-    position: 'relative',
-    left: '15%'
-  }
 };
 
 const Nav = (props) => {

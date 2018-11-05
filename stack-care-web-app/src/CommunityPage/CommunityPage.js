@@ -20,7 +20,6 @@ class CommunityPage extends React.Component {
     }
     events = null
     componentDidUpdate(prevProps) {
-        console.log('events refreshed')
         if(prevProps.selectedCommunityId !== undefined && this.props.selectedCommunityId !== prevProps.selectedCommunityId) this.props.getAllUnits(this.props.selectedCommunityId)
     }
 
@@ -40,9 +39,15 @@ class CommunityPage extends React.Component {
         }
     } 
 
+    returnAvgEvents = (unitId) => {
+        if(this.props.events) {
+            return this.props.events.filter(e => e.unit_id === unitId).length        
+        }
+    }
+
     render () {
         return (
-            !this.props.loaded ? <Loading /> :
+            !this.props.loadedUnitDetails ? <Loading /> :
             <NavBar>
                 <Grid container className="flex" justify="center" alignItems="stretch">
                     <Grid item xs={10} className="flex">
@@ -57,11 +62,11 @@ class CommunityPage extends React.Component {
                             <Grid item className={classNames("flex", "bottomGridContainer", "padded")}>
                                 <Grid container className="flex" alignItems="stretch" direction="row" justify="space-around">
                                     <Grid item sm={6} className={classNames("flex", "padded")}>
-                                        <SiteList returnColor={this.returnColor} units={this.props.allUnits[this.props.selectedCommunityId]} communityName={this.props.allCommunities.find(community => community.id === this.props.selectedCommunityId).name} getUnitDetails={this.props.getUnitDetails} />
+                                        <SiteList avgEvents={this.returnAvgEvents} bulbs={this.props.bulbs} sensors={this.props.sensors} switches={this.props.switches}  returnColor={this.returnColor} units={this.props.allUnits[this.props.selectedCommunityId]} communityName={this.props.allCommunities.find(community => community.id === this.props.selectedCommunityId).name} getUnitDetails={this.props.getUnitDetails} />
                                     </Grid>
                                     <Grid item sm={6} className={classNames("flex", "padded")}>
                                         {
-                                            !this.props.selectedUnitId ? <Placeholder /> : <DeviceList setCurrentZone={this.props.setCurrentZone} loadedCurrentZone={this.props.loadedCurrentZone} currentZone={this.props.currentZone} unit={this.props.allUnits[this.props.selectedCommunityId].find(unit => unit.id === this.props.selectedUnitId)} />
+                                            !this.props.selectedUnitId ? <Placeholder /> : <DeviceList setCurrentZone={this.props.setCurrentZone} loadedCurrentZone={this.props.loadedCurrentZone} currentZone={this.props.currentZone} zones={this.props.zones.filter(z => z.site_id === this.props.selectedUnitId)} unit={this.props.allUnits[this.props.selectedCommunityId].find(u => u.id === this.props.selectedUnitId)}/>
                                         }
                                     </Grid>
                                 </Grid>
@@ -75,7 +80,7 @@ class CommunityPage extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    const { loaded, allUnits, selectedCommunityId, selectedUnitId, currentZone, loadedCurrentZone } = state.units
+    const { loaded, allUnits, selectedCommunityId, selectedUnitId, currentZone, loadedCurrentZone, loadedUnitDetails, zones, bulbs, sensors, switches } = state.units
     const { allCommunities } = state.communities
     const { allEvents } = state.events
     return {
@@ -86,7 +91,9 @@ const mapStateToProps = (state) => {
         selectedUnitId,
         currentZone,
         loadedCurrentZone,
-        allEvents: eventsHandler(allEvents)
+        loadedUnitDetails, zones, bulbs, sensors, switches,
+        allEvents: eventsHandler(allEvents),
+        events: allEvents
     }
 }
 
@@ -108,7 +115,6 @@ const eventsHandler = (allEvents) => {
 const mapDispatchToProps = (dispatch) => ({
     getUnitDetails: (id) => {
         dispatch(unitActions.setUnit(id))
-        dispatch(unitActions.getUnitDetails(id))
     },
     getAllUnits: (id) => {
         dispatch(unitActions.getAllUnits(id))

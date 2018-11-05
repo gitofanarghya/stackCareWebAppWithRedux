@@ -41,7 +41,6 @@ export function events(state, action) {
 
 function eventsByCommunityCalculator(events, map) {
   const eventsByUnitID = groupBy(events, "unit_id")
-  console.log("eventsByUnitID", eventsByUnitID)
   const eventsWithCommunityId = events.map(e => {
     const arr = map.filter(u => u.unitID === e.unit_id)
     const communityId = arr[0] ? arr[0].communityID : null
@@ -50,6 +49,5 @@ function eventsByCommunityCalculator(events, map) {
       community_id: communityId
     }
   })
-  console.log("eventsWithCommunityId", eventsWithCommunityId)
   return eventsWithCommunityId
 }

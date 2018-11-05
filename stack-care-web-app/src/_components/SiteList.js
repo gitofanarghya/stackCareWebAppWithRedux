@@ -44,13 +44,11 @@ function SiteList(props) {
   const data = props.units.map(unit => ({
     id: id++,
     name: unit.name,
-    deviceCount: getRandomInt(3),
     avgEventCount: getRandomInt(3),
     unitId: unit.id,
     isNotificationsPaused: unit.is_notifications_paused,
     isOccupied: unit.is_occupied
   }))
-
   return (
     <Paper className={classes.root}>
         <Typography className={classes.heading} variant="headline" component="h3">
@@ -78,8 +76,8 @@ function SiteList(props) {
                             {n.name}
                         </Typography>    
                     </TableCell>
-                    <TableCell padding="dense">{n.deviceCount}</TableCell>
-                    <TableCell padding="dense">{n.avgEventCount}</TableCell>
+                    <TableCell padding="dense">{props.bulbs.filter(b => b.site_id === n.unitId).length + props.sensors.filter(s => s.site_id === n.unitId).length + props.switches.filter(sw => sw.site_id === n.unitId).length}</TableCell>
+                    <TableCell padding="dense">{props.avgEvents(n.unitId)}</TableCell>
                 </TableRow>
                 );
             })}

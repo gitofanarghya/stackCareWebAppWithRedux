@@ -20,9 +20,10 @@ main {
 }
 
 .logo-bg {
-  background-image: url('/img/logo.png');
+  background-image: url('/img/logo-new.png');
   background-size: contain;
   background-repeat: no-repeat;
+  justify-content: center;
 }
 
 .App-grid {
