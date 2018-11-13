@@ -11,7 +11,8 @@ const initialState = {
   zones: [],
   bulbs: [],
   switches: [],
-  sensors: []
+  sensors: [],
+  hubs: []
 }
 
 export function units(state, action) {
@@ -121,6 +122,11 @@ export function units(state, action) {
       return {
         ...state,
         switches: [...state.switches, ...action.result]
+      }
+    case unitConstants.GET_ALL_HUBS_SUCCESS:
+      return {
+        ...state,
+        hubs: [...state.hubs, ...action.result]
       }
     default:
       return state
