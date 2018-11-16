@@ -14,11 +14,10 @@ import classNames from 'classnames';
 
 const styles = {
     card: {
-        minWidth: 320,
-        maxWidth: 550
+        maxHeight: 450
       },
       media: {
-        paddingTop: '56.25%', // 16:9
+        paddingTop: '213.64px',//'56.25%', // 16:9
         'background-size': 'contain'
       }
 }
@@ -58,13 +57,13 @@ class LoginPage extends React.Component {
     render() {
         const { loggingIn, classes } = this.props;
         return ( loggingIn ? <Loading /> :
-            <NavBar>
-            <Grid container className={classNames("App", "flex")} alignItems="center" direction="row" justify="center">
-              <Grid sm={6} item className={classNames("flex", "loginpiccontainer")}>
+            <div style={{height: '100%'}}><NavBar />
+            <Grid container direction="row" justify="center" alignItems='center' style={{height: 'calc(100% - 64px)'}}>
+              <Grid md={6} sm={false} xs={false} item style={{height: '450px'}}>
                 <div className="loginpic">
                 </div>
               </Grid>
-              <Grid sm={3} item className="flex">
+              <Grid md={3} sm={6} xs={10} item>
               <Card className={classes.card}>
                 <CardMedia
                     className={classes.media}
@@ -104,8 +103,7 @@ class LoginPage extends React.Component {
             </Card>
               </Grid>
             </Grid>
-        </NavBar>
-                        
+            </div>       
         
         )
     }

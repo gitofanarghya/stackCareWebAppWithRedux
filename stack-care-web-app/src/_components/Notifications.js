@@ -10,7 +10,6 @@ export function Notifications(props) {
     chart: {
       type: 'column',
       animation: Highcharts.svg, // don't animate in old IE
-      marginRight: 10,
       events: {
         load: function () {
   

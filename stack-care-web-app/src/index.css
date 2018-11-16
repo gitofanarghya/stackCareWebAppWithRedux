@@ -23,7 +23,8 @@ main {
   background-image: url('/img/logo-new.png');
   background-size: contain;
   background-repeat: no-repeat;
-  justify-content: center;
+  justify-content: flex-start;
+  height: 64px;
 }
 
 .App-grid {
@@ -94,7 +95,6 @@ main {
   border-radius: 4px;
   background-color: #ffffff;
   margin-bottom: 10px !important;
-  flex-grow: 1.5 !important;
 }
 
 .graphContainer {
@@ -153,15 +153,16 @@ main {
   color: grey;
   font-size: 35px;
   border: grey 7px dashed;
+  min-height: 500px;
 }
 
 .bulbIcon {
   background-image: url(/img/bulb.png);
-  width: 50px;
-  height: 80px;
+  width: 30px;
+  height: 50px;
   background-size: contain;
   background-repeat: no-repeat;
-  transition: 0.3s;
+  transition: 1s;
 }
 
 .bulbIcon:hover {
@@ -170,11 +171,11 @@ main {
 
 .sensorIcon {
   background-image: url(/img/sensor.png);
-  width: 50px;
-  height: 80px;
+  width: 30px;
+  height: 50px;
   background-size: contain;
   background-repeat: no-repeat;
-  transition: 0.3s;
+  transition: 1s;
 }
 
 .sensorIcon:hover {
@@ -183,11 +184,11 @@ main {
 
 .switchIcon {
   background-image: url(/img/switch.png);
-  width: 50px;
-  height: 80px;
+  width: 30px;
+  height: 50px;
   background-size: contain;
   background-repeat: no-repeat;
-  transition: 0.3s;
+  transition: 1s;
 }
 
 .switchIcon:hover{

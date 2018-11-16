@@ -41,7 +41,7 @@ function getAllUnits(id) {
 function setUnit(id) {
     return (dispatch, getState) => {
         dispatch(request(id))
-        dispatch(setCurrentZone(getState().units.zones.filter(z => z.site_id === id)[0].id))
+//        dispatch(setCurrentZone(getState().units.zones.filter(z => z.site_id === id)[0].id))
     }
 
     function request(id) { return { type: unitConstants.SET_UNIT, id } }

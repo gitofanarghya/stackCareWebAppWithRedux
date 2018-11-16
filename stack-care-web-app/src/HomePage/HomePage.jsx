@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography'
 import { communityActions, unitActions } from '../_actions';
 import classNames from 'classnames';
+import { Paper } from '@material-ui/core';
 
 
 class HomePage extends React.Component {
@@ -15,18 +16,67 @@ class HomePage extends React.Component {
 
     render() {
         const { allCommunities, loaded, loadedEvents, eventsWithCommunityId } = this.props;
-
-        /*
-        <Grid item sm={2} className={classNames("flex", "refreshContainer")}>
-        
-        </Grid>
-        <Grid item sm={2} className={classNames("flex", "filterContainer")}>
-        
-        </Grid>*/
         return(
             !loaded ? <Loading /> :
             <NavBar>
-                <Grid container className="flex" justify="center" alignItems="stretch">
+                <Grid container direction="column" justify="flex-start" style={{flexGrow: 1}}>
+                    <Grid container item xs={12} justify="space-around" style={{height: '100px'}}>
+                        <Grid item xs={11} sm={10} md={8} lg={6} style={{margin: 'auto'}}>
+                            <SearchBar allCommunities={allCommunities} setCommunity={this.props.setCommunity} />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={24} item xs={12} direction='row' justify='space-around'>
+                        <Grid item xs={11} sm={10} md={9} lg={5}>
+                            {loadedEvents ? <CommunitiesStatus eventsWithCommunity={eventsWithCommunityId} allCommunities={allCommunities} setCommunity={this.props.setCommunity} /> : <Loading />}
+                        </Grid>
+                        <Grid container spacing={24} alignContent='flex-start' justify='flex-start' item xs={11} sm={10} md={9} lg={5}>
+                            <Grid item xs={12} style={{height: '420px'}}>
+                                <Paper>
+                                    <Map setCommunity={this.props.setCommunity}/>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={12} style={{height: '420px'}}>
+                                <Paper>
+                                    <Typography variant="headline" component="h3">
+                                        Notifications
+                                    </Typography>
+                                    {loadedEvents ? <Notifications eventsWithCommunityId={eventsWithCommunityId}/> : <Loading />}
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>    
+            </NavBar>
+        )
+    }
+}
+
+
+function mapStateToProps(state) {
+    const { loaded, allCommunities } = state.communities;
+    const { loadedEvents, eventsWithCommunityId } = state.events;
+    return {
+        allCommunities,
+        loaded,
+        loadedEvents,
+        eventsWithCommunityId
+    };
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    setCommunity: (id) => {
+        dispatch(unitActions.setCommunity(id))
+    },
+    getAllCommunities: () => {
+        dispatch(communityActions.getAllCommunities())
+    }
+})
+
+const connectedHomePage = connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export { connectedHomePage as HomePage };
+
+/*
+<Grid container className="flex" justify="center" alignItems="stretch">
                     <Grid item xs={10} className="flex">
                         <Grid container className="flex" alignItems="stretch" direction="column" justify="space-around">
                             <Grid item className={classNames("flex", "topGridContainer", "padded2x")}>
@@ -65,31 +115,12 @@ class HomePage extends React.Component {
                         </Grid>
                     </Grid>
                 </Grid>
-            </NavBar>
-        )
-    }
-}
 
+<Grid item sm={2} className={classNames("flex", "refreshContainer")}>
+        
+        </Grid>
+        <Grid item sm={2} className={classNames("flex", "filterContainer")}>
+        
+        </Grid>
 
-function mapStateToProps(state) {
-    const { loaded, allCommunities } = state.communities;
-    const { loadedEvents, eventsWithCommunityId } = state.events;
-    return {
-        allCommunities,
-        loaded,
-        loadedEvents,
-        eventsWithCommunityId
-    };
-}
-
-const mapDispatchToProps = (dispatch) => ({
-    setCommunity: (id) => {
-        dispatch(unitActions.setCommunity(id))
-    },
-    getAllCommunities: () => {
-        dispatch(communityActions.getAllCommunities())
-    }
-})
-
-const connectedHomePage = connect(mapStateToProps, mapDispatchToProps)(HomePage);
-export { connectedHomePage as HomePage };
+                */

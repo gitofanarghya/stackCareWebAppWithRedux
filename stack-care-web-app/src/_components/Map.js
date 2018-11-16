@@ -2,7 +2,7 @@ import React from 'react'
 import Highcharts from 'highcharts'
 import HC_map from 'highcharts/modules/map'
 import HighchartsReact from 'highcharts-react-official'
-import mapData from './usa'
+import mapData from './world'
 import { markersData } from '../_helpers'
 import proj4 from 'proj4'
 import orange from '@material-ui/core/colors/orange';
@@ -13,11 +13,9 @@ export const Map = (props) => {
   window.proj4 = proj4
 
   const markers = markersData ? markersData : null
-
   const options = {
     chart: {
       map: mapData,
-      marginLeft: 50,
     },
   
     title: {
@@ -25,12 +23,7 @@ export const Map = (props) => {
     },
   
     mapNavigation: {
-      enabled: false
-    },
-  
-    tooltip: {
-      headerFormat: '',
-      pointFormat: '<b>{point.name}</b><br>Lat: {point.lat}, Lon: {point.lon}'
+      enabled: true
     },
 
     plotOptions: {
@@ -49,7 +42,8 @@ export const Map = (props) => {
       name: 'Basemap',
       borderColor: '#A0A0A0',
       nullColor: 'rgba(200, 200, 200, 0.3)',
-      showInLegend: false
+      showInLegend: false,
+      enableMouseTracking: false
     }, {
       name: 'Separators',
       type: 'mapline',
@@ -57,11 +51,19 @@ export const Map = (props) => {
       showInLegend: false,
       enableMouseTracking: false
     }, {
+      allowPointSelect: true,
+      cursor: 'pointer',
       type: 'mappoint',
       name: 'Communities',
       color: orange[500],
       showInLegend: false,
-      data: markers
+      data: markers,
+      tooltip: {
+        headerFormat: '',
+        pointFormat: '<b>{point.name}</b><br>Lat: {point.lat}, Lon: {point.lon}'
+      },
+      stickyTracking: false
+      
     }]
   }
   

@@ -47,7 +47,8 @@ function SiteList(props) {
     avgEventCount: getRandomInt(3),
     unitId: unit.id,
     isNotificationsPaused: unit.is_notifications_paused,
-    isOccupied: unit.is_occupied
+    isOccupied: unit.is_occupied,
+    last_motion_time: unit.last_motion_time
   }))
   return (
     <Paper className={classes.root}>
@@ -59,7 +60,7 @@ function SiteList(props) {
             <TableRow>
                 <TableCell padding="dense"></TableCell>
                 <TableCell padding="dense"><Typography variant="subheading">No. of devices</Typography></TableCell>
-                <TableCell padding="dense"><Typography variant="subheading">Avg. events</Typography></TableCell>
+                <TableCell padding="dense"><Typography variant="subheading">Last motion time</Typography></TableCell>
             </TableRow>
             </TableHead>
             <TableBody>
@@ -77,7 +78,7 @@ function SiteList(props) {
                         </Typography>    
                     </TableCell>
                     <TableCell padding="dense">{props.bulbs.filter(b => b.site_id === n.unitId).length + props.sensors.filter(s => s.site_id === n.unitId).length + props.switches.filter(sw => sw.site_id === n.unitId).length}</TableCell>
-                    <TableCell padding="dense">{props.avgEvents(n.unitId)}</TableCell>
+                    <TableCell padding="dense">{n.last_motion_time/*props.avgEvents(n.unitId)*/}</TableCell>
                 </TableRow>
                 );
             })}

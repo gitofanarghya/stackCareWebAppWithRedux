@@ -128,6 +128,13 @@ export function units(state, action) {
         ...state,
         hubs: [...state.hubs, ...action.result]
       }
+    case unitConstants.GET_ALL_DEVICES_SUCCESS:
+      return {
+        ...state,
+        bulbs: [...state.bulbs, ...action.result.filter(d => d.device_type === 'bulb')],
+        sensors: [...state.sensors, ...action.result.filter(d => d.device_type === 'sensor')],
+        switches: [...state.switches, ...action.result.filter(d => d.device_type === 'switch')]
+      }
     default:
       return state
   }

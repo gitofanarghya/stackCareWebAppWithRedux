@@ -49,7 +49,8 @@ class Communities extends React.Component {
         Hub: hub,
         Device: device,
         Battery: battery,
-        commId: community.id
+        commId: community.id,
+        events: communityEvents.length
       }
     }).sort(sort_by('Hub', 'Device', 'Battery'));
 
@@ -65,6 +66,7 @@ class Communities extends React.Component {
                   <TableCell padding="dense"><Typography variant="subheading" >Hub</Typography></TableCell>
                   <TableCell padding="dense"><Typography variant="subheading">Device</Typography></TableCell>
                   <TableCell padding="dense"><Typography variant="subheading">Battery</Typography></TableCell>
+                  <TableCell padding="dense"><Typography variant="subheading">Events</Typography></TableCell>
               </TableRow>
               </TableHead>
               <TableBody>
@@ -84,6 +86,7 @@ class Communities extends React.Component {
                       <TableCell padding="dense"><StatusIcon status = {n.Hub} /></TableCell>
                       <TableCell padding="dense"><StatusIcon status = {n.Device} /></TableCell>
                       <TableCell padding="dense"><StatusIcon status = {n.Battery} /></TableCell>
+                      <TableCell padding="dense">{n.events}</TableCell>
                   </TableRow>
                   );
               })}
