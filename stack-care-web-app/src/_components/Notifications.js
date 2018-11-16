@@ -32,7 +32,8 @@ export function Notifications(props) {
     },
     yAxis: {
       title: {
-        text: 'No. of events'
+        text: 'No. of events',
+        tickInterval: 1
       },
       plotLines: [{
         value: 0,
