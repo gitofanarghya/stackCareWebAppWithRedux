@@ -11,27 +11,16 @@ import { RegisterPage } from '../RegisterPage';
 import { CommunityPage } from '../CommunityPage';
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
-        const { dispatch } = this.props;
-        history.listen((location, action) => {
-            // clear alert on location change
-            dispatch(alertActions.clear());
-        });
-    }
+    
 
     componentDidMount() {
         if(this.props.loggedIn) this.props.dispatch(eventActions.getAllEvents());
     }
 
     componentWillReceiveProps(prevProps) {
-        if (this.props.loggedIn !== prevProps.loggedIn) {
-            if(this.props.loggedIn) this.props.dispatch(eventActions.getAllEvents())
-        }
-        if (this.props.loaded !== prevProps.loaded) {
+        if (this.props.loadedEvents !== prevProps.loadedEvents) {
 
             clearTimeout(this.timeout);
-            // Optionally do something with data
             if (!prevProps.requesting) {
                 this.startPoll();
             }
@@ -39,7 +28,7 @@ class App extends React.Component {
     }
 
     startPoll() {
-        this.timeout = setTimeout(() => this.props.dispatch(eventActions.getAllEvents()), 120000);
+        this.timeout = setTimeout(() => this.props.dispatch(eventActions.getAllEvents()), 300000);
     }
     
     componentWillUnmount() {
@@ -47,13 +36,14 @@ class App extends React.Component {
     }
 
     render() {
+        console.log()
         return ( 
             <Router history={history}>
                 <div className="h100">
                 <Switch>
-                    <PrivateRoute exact path="/" component={HomePage} refreshed={this.props.refreshed} />
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/register" component={RegisterPage} />
+                    <PrivateRoute exact path="/" component={HomePage} refreshed={this.props.refreshed} />
                     <PrivateRoute exact path="/:id" component={CommunityPage} refreshed={this.props.refreshed} />
                 </Switch>
                 </div>
@@ -64,10 +54,10 @@ class App extends React.Component {
 
 function mapStateToProps(state) {
     const { refreshed, loggedIn } = state.authentication;
-    const { loaded, requesting } = state.events
+    const { loadedEvents, requesting } = state.events
     return {
         refreshed,
-        loaded,
+        loadedEvents,
         requesting,
         loggedIn
     };

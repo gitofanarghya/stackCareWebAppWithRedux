@@ -15,10 +15,12 @@ import { unitCountByCommunity } from '../_helpers'
 const styles = theme => ({
   root: {
     width: '100%',
-    overflowX: 'auto',
-    ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
+    height: '530px',
+    overflow: 'auto',
+  },
+  table: {
+    padding: '10px',
+    borderCollapse: 'unset'
   }
 });
 
@@ -33,10 +35,10 @@ class Communities extends React.Component {
   }
 
   render() {
-    const {classes, allCommunities, eventsWithCommunity} = this.props;
+    const {classes, allCommunities, events} = this.props;
     let id = 0
     const data = allCommunities.map(community => {
-      const communityEvents = eventsWithCommunity.filter(e => e.community_id === community.id)
+      const communityEvents = events.filter(e => e.community_id === community.id && (unitCountByCommunity.find(c => c.communityId === e.community_id) !== undefined))
       const hubEventsCount = communityEvents.filter(e => e.event_type === 'hub_offline').length
       const hub = hubEventsCount === 0 ? 2 : hubEventsCount < unitCountByCommunity.find(c => c.communityId === community.id).unitCount*0.1 ? 1 : 0
       const deviceEventsCount = communityEvents.filter(e => e.event_type === 'device_offline').length
@@ -48,25 +50,28 @@ class Communities extends React.Component {
         name: community.name,
         Hub: hub,
         Device: device,
+        sortingParameter: hubEventsCount + deviceEventsCount + batteryEventsCount,
         Battery: battery,
         commId: community.id,
         events: communityEvents.length
       }
-    }).sort(sort_by('Hub', 'Device', 'Battery'));
+    }).sort(function(a, b){
+      return b.sortingParameter - a.sortingParameter
+  });
 
     return (
-      <Paper className={classes.root}>
-          <Typography variant="headline" component="h3">
+      <Paper className='communityStatus'>
+          <Typography variant="headline" component="h3" style={{paddingLeft: '10px'}}>
             Community Status
           </Typography>
           <Table className={classes.table}>
               <TableHead>
               <TableRow>
-                  <TableCell padding="dense"></TableCell>
-                  <TableCell padding="dense"><Typography variant="subheading" >Hub</Typography></TableCell>
-                  <TableCell padding="dense"><Typography variant="subheading">Device</Typography></TableCell>
-                  <TableCell padding="dense"><Typography variant="subheading">Battery</Typography></TableCell>
-                  <TableCell padding="dense"><Typography variant="subheading">Events</Typography></TableCell>
+                  <TableCell padding="none"></TableCell>
+                  <TableCell padding="none"><Typography variant="subheading" >Hub</Typography></TableCell>
+                  <TableCell padding="none"><Typography variant="subheading">Device</Typography></TableCell>
+                  <TableCell padding="none"><Typography variant="subheading">Battery</Typography></TableCell>
+                  <TableCell padding="none"><Typography variant="subheading">Events</Typography></TableCell>
               </TableRow>
               </TableHead>
               <TableBody>
@@ -78,15 +83,15 @@ class Communities extends React.Component {
                     className={classes.row}
                     key={n.id}
                   >
-                      <TableCell component="th" scope="row" padding="dense">
+                      <TableCell component="th" scope="row" padding="none">
                           <Typography variant="body1">
                               {n.name}
                           </Typography>    
                       </TableCell>
-                      <TableCell padding="dense"><StatusIcon status = {n.Hub} /></TableCell>
-                      <TableCell padding="dense"><StatusIcon status = {n.Device} /></TableCell>
-                      <TableCell padding="dense"><StatusIcon status = {n.Battery} /></TableCell>
-                      <TableCell padding="dense">{n.events}</TableCell>
+                      <TableCell padding="none"><StatusIcon status = {n.Hub} /></TableCell>
+                      <TableCell padding="none"><StatusIcon status = {n.Device} /></TableCell>
+                      <TableCell padding="none"><StatusIcon status = {n.Battery} /></TableCell>
+                      <TableCell padding="none">{n.events}</TableCell>
                   </TableRow>
                   );
               })}

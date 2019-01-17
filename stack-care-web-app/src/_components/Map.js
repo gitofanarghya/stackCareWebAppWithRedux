@@ -11,11 +11,17 @@ HC_map(Highcharts)
 
 export const Map = (props) => {
   window.proj4 = proj4
-
+  const height = window.innerHeight > 900  ? 345.5 : 255 
   const markers = markersData ? markersData : null
   const options = {
     chart: {
+      height: height,
       map: mapData,
+      events: {
+        load: function() {
+          this.mapZoom(0.5, 1)
+        }
+      }
     },
   
     title: {
@@ -36,7 +42,7 @@ export const Map = (props) => {
               }
           }
       }
-  },
+    },
   
     series: [{
       name: 'Basemap',

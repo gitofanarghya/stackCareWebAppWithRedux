@@ -1,4 +1,5 @@
 import {history} from './history'
+import { environment } from '.';
 const REFRESH_REQUEST = 'USERS_REFRESH_REQUEST'
 const REFRESH_SUCCESS = 'USERS_REFRESH_SUCCESS'
 const REFRESH_FAILURE = 'USERS_REFRESH_FAILURE'
@@ -22,7 +23,7 @@ const requestOptions = {
 const checkTokenExpirationMiddleware = store => next => action => {
     if(action.type === INVALID_ACCESS_TOKEN) {
         store.dispatch(request())
-        fetch(`https://care-api-prod.appspot.com/oauth2/tokens`, requestOptions)
+        fetch(`https://care-api-${environment()}.appspot.com/oauth2/tokens`, requestOptions)
             .then(response => response.json())
             .then(user => {
                 if (user.access_token) {

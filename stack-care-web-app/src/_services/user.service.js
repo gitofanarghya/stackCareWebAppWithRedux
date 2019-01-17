@@ -1,4 +1,5 @@
 import { authHeader, history } from '../_helpers';
+import { environment } from '../_helpers';
 
 export const userService = {
     login,
@@ -23,14 +24,14 @@ function login(username, password) {
         })
     };
 
-    return fetch(`https://care-api-prod.appspot.com/oauth2/tokens`, requestOptions)
+    return fetch(`https://care-api-${environment()}.appspot.com/oauth2/tokens`, requestOptions)
         .then(handleResponse)
         .then(user => {
             // login successful if there's a jwt token in the response
             if (user.access_token) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
-                window.location.reload(true)
+                //window.location.reload(true)
             }
 
             return user;

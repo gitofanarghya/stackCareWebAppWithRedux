@@ -11,7 +11,7 @@ import { history } from '../_helpers'
 
 const styles = {
   root: {
-    flexGrow: 1
+    height: '100%'
   },
   home: {
     margin: 'auto'
@@ -22,28 +22,25 @@ const Nav = (props) => {
   const { classes, children } = props;
   return (
   
-    <div className={classNames(classes.root, "container-column", "flex-item")}>
+    <div className={classNames(props.main ? classes.root : '', "container-column", "flex-item")}>
         <AppBar className={classes.AppBar} position="static" color="secondary">
             <Toolbar>
             <Grid container justify="space-between" alignItems='center' style={{height: '64px'}}>
-              <Grid item xs={false} sm={false} md={5} className="logo-bg"></Grid>
+              <Grid item xs={false} sm={false} md={5} className="logo-bg" onClick={() => history.push(`/`)}></Grid>
               <Grid item xs>
                 <Typography variant="display1" color="primary">
                     Operations Center
                 </Typography>
               </Grid>
-              <Grid item xs={3} sm={2}>
-                <Button variant="contained" color="secondary" aria-label="Home" className={classes.home} onClick={() => history.push(`/`)}>
-                  <HomeIcon />  HOME
-                </Button>            
-              </Grid>
             </Grid>
 
             </Toolbar>            
         </AppBar>
-        <main className={classNames("container-column", "flex-item")}>
+        {props.main &&
+        <main >
             {children}
         </main>
+        }
     </div>
   );
 }

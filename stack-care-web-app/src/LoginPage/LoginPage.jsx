@@ -46,7 +46,7 @@ class LoginPage extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        this.setState({ submitted: true });
+        //this.setState({ submitted: true });
         const { username, password } = this.state;
         const { dispatch } = this.props;
         if (username && password) {
@@ -57,7 +57,7 @@ class LoginPage extends React.Component {
     render() {
         const { loggingIn, classes } = this.props;
         return ( loggingIn ? <Loading /> :
-            <div style={{height: '100%'}}><NavBar />
+            <div style={{height: '100%'}}><NavBar main={false}/>
             <Grid container direction="row" justify="center" alignItems='center' style={{height: 'calc(100% - 64px)'}}>
               <Grid md={6} sm={false} xs={false} item style={{height: '450px'}}>
                 <div className="loginpic">

@@ -13,11 +13,9 @@ import Typography from '@material-ui/core/Typography';
 const styles = theme => ({
   root: {
     width: '100%',
-    overflowX: 'auto',
-    ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
-    paddingLeft: 'unset !important'
+    overflow: 'auto',
+    height: '530px',
+    marginBottom: '29px'
   },
   rowRed: {
     borderLeft: `red 20px solid`
@@ -44,23 +42,29 @@ function SiteList(props) {
   const data = props.units.map(unit => ({
     id: id++,
     name: unit.name,
-    avgEventCount: getRandomInt(3),
+    /*sortParameter1: props.getHubOfflineEventCount(unit.id),
+    sortParameter2: props.getDeviceOfflineEventCount(unit.id),
+    sortParameter3: props.getBatteryLowEventCount(unit.id),*/
     unitId: unit.id,
     isNotificationsPaused: unit.is_notifications_paused,
     isOccupied: unit.is_occupied,
-    last_motion_time: unit.last_motion_time
+    last_motion_time: unit.last_motion_time,
+    latest_event: props.getLatestEvent(unit.id),
+   // responderDetails: props.getLatestEvent(unit.id) === 'no event' ? null : props.getResponderDetails(props.getLatestEvent(unit.id).responder_id)
   }))
   return (
-    <Paper className={classes.root}>
-        <Typography className={classes.heading} variant="headline" component="h3">
-          <p>{props.communityName} - Summary</p>
+    <Paper className='siteList'>
+        <Typography variant="headline" component="h3" style={{paddingLeft: '10px'}}>
+          {props.communityName} - Summary          
         </Typography>
         <Table className={classes.table}>
             <TableHead>
             <TableRow>
-                <TableCell padding="dense"></TableCell>
-                <TableCell padding="dense"><Typography variant="subheading">No. of devices</Typography></TableCell>
-                <TableCell padding="dense"><Typography variant="subheading">Last motion time</Typography></TableCell>
+                <TableCell padding="none"></TableCell>
+                <TableCell padding="none"><Typography variant="subheading">No. of devices</Typography></TableCell>
+                <TableCell padding="none"><Typography variant="subheading">Last motion time</Typography></TableCell>
+                <TableCell padding="none"><Typography variant="subheading">Latest event</Typography></TableCell>
+                <TableCell padding="none"><Typography variant="subheading">Event created at</Typography></TableCell>
             </TableRow>
             </TableHead>
             <TableBody>
@@ -72,13 +76,15 @@ function SiteList(props) {
                   className={props.returnColor(n.unitId, classes)} 
                   key={n.id}
                 >
-                    <TableCell component="th" scope="row" padding="dense">
+                    <TableCell component="th" scope="row" padding="none">
                         <Typography variant="body1">
                             {n.name}
                         </Typography>    
                     </TableCell>
-                    <TableCell padding="dense">{props.bulbs.filter(b => b.site_id === n.unitId).length + props.sensors.filter(s => s.site_id === n.unitId).length + props.switches.filter(sw => sw.site_id === n.unitId).length}</TableCell>
-                    <TableCell padding="dense">{n.last_motion_time/*props.avgEvents(n.unitId)*/}</TableCell>
+                    <TableCell padding="none">{props.bulbs.filter(b => b.site_id === n.unitId).length + props.sensors.filter(s => s.site_id === n.unitId).length + props.switches.filter(sw => sw.site_id === n.unitId).length}</TableCell>
+                    <TableCell padding="none">{n.last_motion_time/*props.avgEvents(n.unitId)*/}</TableCell>
+                    <TableCell padding="none">{n.latest_event !== 'no event' ? n.latest_event.event_type : 'no event'}</TableCell>
+                    <TableCell padding="none">{n.latest_event !== 'no event' ? n.latest_event.time_created : ''}</TableCell>
                 </TableRow>
                 );
             })}

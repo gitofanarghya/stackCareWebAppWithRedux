@@ -1,4 +1,5 @@
 import { authHeader } from '../_helpers';
+import { environment } from '../_helpers';
 
 export const communityService = {
     getAllCommunities
@@ -14,7 +15,7 @@ function getAllCommunities() {
         body: null
     };
 
-    return fetch(`https://care-api-prod.appspot.com/communities?get_all=1`, requestOptions)
+    return fetch(`https://care-api-${environment()}.appspot.com/communities?get_all=1`, requestOptions)
         .then(handleResponse)
 }
 

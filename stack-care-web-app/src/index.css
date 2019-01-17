@@ -25,6 +25,7 @@ main {
   background-repeat: no-repeat;
   justify-content: flex-start;
   height: 64px;
+  cursor: pointer;
 }
 
 .App-grid {
@@ -150,16 +151,16 @@ main {
   align-items: center;
   justify-content: center;
   flex-grow: 1;
-  color: grey;
+  color: white;
+  background: #525963;
   font-size: 35px;
-  border: grey 7px dashed;
-  min-height: 500px;
+  height: 255px;
 }
 
 .bulbIcon {
   background-image: url(/img/bulb.png);
-  width: 30px;
-  height: 50px;
+  width: 20px;
+  height: 30px;
   background-size: contain;
   background-repeat: no-repeat;
   transition: 1s;
@@ -171,8 +172,8 @@ main {
 
 .sensorIcon {
   background-image: url(/img/sensor.png);
-  width: 30px;
-  height: 50px;
+  width: 20px;
+  height: 30px;
   background-size: contain;
   background-repeat: no-repeat;
   transition: 1s;
@@ -184,8 +185,8 @@ main {
 
 .switchIcon {
   background-image: url(/img/switch.png);
-  width: 30px;
-  height: 50px;
+  width: 20px;
+  height: 30px;
   background-size: contain;
   background-repeat: no-repeat;
   transition: 1s;
@@ -201,4 +202,83 @@ main {
 
 .w100 {
   width: 100%;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+.communityStatus {
+  width: 100%;
+  height: 530px;
+  overflow: auto;
+}
+
+.siteList {
+  width: 100%;
+  height: 530px;
+  overflow: auto;
+}
+
+
+.deviceList {
+  height: 255px;
+  overflow: auto;
+  margin-bottom: 29px !important;
+}
+
+.mapGrid {
+  height: 255px;
+  margin-bottom: 29px !important;
+}
+
+.notificationsGrid {
+  height: 255px;
+  margin-bottom: 20px !important;
+}
+
+@media screen and (min-height: 700px) {
+  main {
+    height: calc(100% - 64px) !important;
+  }
+}
+
+@media screen and (min-height: 900px) {
+  .communityStatus {
+    height: auto;
+    max-height: 711px;
+  }
+  .siteList {
+    height: auto;
+    max-height: 711px;
+  }
+  .mapGrid {
+    height: 345.5px;
+    margin-bottom: 29px !important;
+  }
+  .deviceList {
+    height: 345.5px;
+    margin-bottom: 29px !important;
+    overflow: auto;
+  }
+  .notificationsGrid {
+    height: 345.5px;
+    margin-bottom: 20px !important;
+  }
 }

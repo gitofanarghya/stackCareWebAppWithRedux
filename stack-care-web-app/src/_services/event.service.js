@@ -1,4 +1,5 @@
 import { authHeader } from '../_helpers';
+import { environment } from '../_helpers';
 
 export const eventService = {
     getAllEvents
@@ -14,7 +15,7 @@ function getAllEvents() {
         body: null
     };
 
-    return fetch(`https://care-api-prod.appspot.com/events?get_all=1&status=unassigned,assigned&limit=500`, requestOptions)
+    return fetch(`https://care-api-${environment()}.appspot.com/events?get_all=1&status=unassigned,assigned&limit=500`, requestOptions)
         .then(handleResponse)
 }
 

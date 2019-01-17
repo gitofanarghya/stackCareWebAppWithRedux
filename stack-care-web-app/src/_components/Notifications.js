@@ -5,31 +5,43 @@ import './light-highchart-theme'
 import { groupBy } from '../_helpers'
 
 export function Notifications(props) {
-
+  
+  const height = window.innerHeight > 900  ? 313.5 : 217 
   const options = {
+    
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'No. of events'
+        },
+        stackLabels: {
+            enabled: true,
+            style: {
+                fontWeight: 'bold',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+            }
+        }
+    },
     chart: {
+      height: height,
       type: 'column',
       animation: Highcharts.svg, // don't animate in old IE
-      events: {
-        load: function () {
-  
-          // set up the updating of the chart each second
-          var series = this.series[0];
-          /*setInterval(function () {
-            var x = (new Date()).getTime(), // current time
-              y = Math.random();
-            series.addPoint([x, y], true, true);
-          }, 30000);*/
-        }
-      }
     },
     title: {
-      text: ''
+      text: 'Notifications'
     },
     xAxis: {
-      type: 'datetime',
-      tickInterval: 24 * 3600 * 1000
-    },
+      categories: (function() {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        return props.events.map(e => (
+          new Date(e.time_created).getDate() + ' ' + monthNames[new Date(e.time_created).getMonth()] + ' ' + new Date(e.time_created).getFullYear()
+        ))
+      }() )
+      //type: 'datetime',
+      //tickInterval: 24 * 3600 * 1000
+    },/*
     yAxis: {
       title: {
         text: 'No. of events',
@@ -53,29 +65,62 @@ export function Notifications(props) {
     },
     exporting: {
       enabled: false
+    },*/
+    legend: {
+        align: 'right',
+        x: -30,
+        verticalAlign: 'top',
+        y: 25,
+        floating: true,
+        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+        borderColor: '#CCC',
+        borderWidth: 1,
+        shadow: false
     },
-    series: [{
-      name: 'Notifications',
-      data: (function () {
-        var finalData = []
+    tooltip: {
+        headerFormat: '<b>{point.x}</b><br/>',
+        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+    },
+    plotOptions: {
+        column: {
+            stacking: 'normal',
+            dataLabels: {
+                enabled: true,
+                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+            }
+        }
+    },
+    series: (function () {
+        var finalData = [{
+          name: 'hub offline',
+          data: []             
+        },{
+          name: 'device offline',
+          data: []
+        },{
+          name: 'battery low',
+          data: []
+        }]
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         ];
-        var cat = props.eventsWithCommunityId.map(e => ({
+        var cat = props.events.map(e => ({
           ...e,
           day: new Date(e.time_created).getDate() + ' ' + monthNames[new Date(e.time_created).getMonth()] + ' ' + new Date(e.time_created).getFullYear()
         }))
         var data = groupBy(cat, 'day')
         for (var key in data) {
           if (data.hasOwnProperty(key)) {
-            finalData.push([
-              Date.parse(key), data[key].length
-            ])
+            var hubOfflineCount = data[key].filter(e => e.event_type === 'hub_offline').length
+            finalData.find(i => i.name === 'hub offline').data.push(hubOfflineCount)
+            var deviceOfflineCount = data[key].filter(e => e.event_type === 'device_offline').length
+            finalData.find(i => i.name === 'device offline').data.push(deviceOfflineCount)
+            var batteryLowCount = data[key].filter(e => e.event_type === 'battery_low').length
+            finalData.find(i => i.name === 'battery low').data.push(batteryLowCount)
           }
         }
         return finalData;
       }())
-    }]
   }
 
   return <HighchartsReact highcharts={Highcharts} options={options} />

@@ -5,3 +5,5 @@ export * from './thunkPoller';
 export * from './groupBy';
 export * from './markersData';
 export * from './community-unit-mapping';
+export * from './firebaseConfig';
+export * from './environmentVariable';
